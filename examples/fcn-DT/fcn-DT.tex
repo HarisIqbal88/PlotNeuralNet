@@ -1,0 +1,140 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+%\usepackage{blocks}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\tikzstyle{connection1}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,0;red,4;green,2;white,0},opacity=0.7]
+ 
+\newcommand{\localmidarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw={rgb:blue,0;red,4;green,2;white,0}] (-0.3,0) -- ++(0.3,0);}
+ 
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw ConvNet Layers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conv1_1,conv1_2,pool1
+\pic[shift={(0,0,0)}] at (0,0,0) {ConvReluPool={blockname=crp1,%
+    numFilters={{"64","64","32"}},height=40,width={2,2},depth=40,zlabel=I}};
+% conv2_1,conv2_2,pool2
+\pic[shift={(2.1,0,0)}] at (crp1-east) {ConvReluPool={blockname=crp2,%
+    numFilters={{"128","128"}},height=35,width={3,3},depth=35,zlabel=I/2}};
+%% conv3_1,conv3_2,conv3_3,pool3
+\pic[shift={(2,0,0)}] at (crp2-east) {ConvReluPool={blockname=crp3,%
+    numFilters={{"256","256","256"}},height=30,width={4,4,4},depth=30,zlabel=I/4}};
+%% conv4_1,conv4_2,conv4_3,pool4
+\pic[shift={(1.5,0,0)}] at (crp3-east) {ConvReluPool={blockname=crp4,%
+    numFilters={{"512","512","512"}},height=23,width={7,7,7},depth=23,zlabel=I/8}};
+%% conv5_1,conv5_2,conv5_3,pool5
+\pic[shift={(1.5,0,0)}] at (crp4-east) {ConvReluPool={blockname=crp5,%
+    numFilters={{"512","512","512"}},height=15,width={7,7,7},depth=15,zlabel=I/16}};
+%% fc6, fc7
+\pic[shift={(1.2,0,0)}] at (crp5-east) {ConvRelu={blockname=cp6_7,%
+        numFilters={{"4096","4096"}},height=10,width={10,10},depth=10,zlabel=I/32}};
+%% score32    
+\pic[shift={(1,0,0)}] at (cp6_7-east) {Conv={blockname=score32,%
+        numFilters={{"21","4096"}},height=10,width=1,depth=10,zlabel=I/32}};
+%% Upsampling Deconv Layer
+\pic[shift={(2,0,0)}] at (score32-east) {Deconv={blockname=up16,%
+        numFilters={{"21","4096"}},height=40,width=1,depth=40,zlabel=I}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Edge Layers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% upsampling crp2 x2
+\pic[shift={(-0.75,-8,0)}] at (crp2-anchor) {Deconv={blockname=crp2_upx2,%
+        numFilters={{"bilinear x2","4096"}},height=7.5,width=7.5,depth=7.5,zlabel=}};
+%% upsampling crp3 x4
+\pic[shift={(-0.75,-8,0)}] at (crp3-anchor) {Deconv={blockname=crp3_upx4,%
+        numFilters={{"bilinear x4","4096"}},height=7.5,width=7.5,depth=7.5,zlabel=}};
+    
+%% edge
+\pic[shift={(7,-11,0)}] at (crp4-west) {Conv={blockname=edge,%
+        numFilters={{"1x1 conv","4096"}}, height=30,width=1,depth=30,zlabel=I}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%% Domain Transform Module
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+    
+\pic[shift={(5,0,0)},fill={rgb:blue,1;red,2;green,4;white,7}] at (up16-east) {DomainTransform={blockname=diff1,%
+        numFilters={{"21","4096"}},height=40,width=1,depth=40,zlabel=}};
+    
+\pic[shift={(2,0,0)},fill={rgb:blue,1;red,2;green,4;white,7}] at (diff1-east) {DomainTransform={blockname=diff2,%
+        numFilters={{"21","4096"}},height=40,width=1,depth=40,zlabel=}};
+
+\pic[shift={(2,0,0)},fill={rgb:blue,1;red,2;green,4;white,7}] at (diff2-east) {DomainTransform={blockname=diff3,%
+        numFilters={{"21","4096"}},height=40,width=1,depth=40,zlabel=}};
+
+\pic[shift={(2,0,0)},fill={rgb:blue,1;red,2;green,4;white,7}] at (diff3-east) {DomainTransform={blockname=diff4,%
+        numFilters={{"21","4096"}},height=40,width=1,depth=40,zlabel=}};            
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Arrows on Domain Transform
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\draw [connection1]  (diff1-anchor)+(0,3,3) -- node{ } ++(0,3,-3);
+\draw [connection1]  (diff1-anchor)+(0,3,3)-- node{\localmidarrow} ++(0,3,2.9);
+\draw [connection1]  (diff1-anchor)+(0,3,-2.9) -- node{\localmidarrow} ++(0,3,-3);
+
+\draw [connection1]  (diff1-anchor)+(0,2,3) -- node{ } ++(0,2,-3);
+\draw [connection1]  (diff1-anchor)+(0,2,3)-- node{\localmidarrow} ++(0,2,2.9);
+\draw [connection1]  (diff1-anchor)+(0,2,-2.9) -- node{\localmidarrow} ++(0,2,-3);
+%%%%%%%%%%%%%%%%%%
+\draw [connection1]  (diff2-anchor)+(0,-3,-3) -- node{ } ++(0,-3,3);
+\draw [connection1]  (diff2-anchor)+(0,-3,-3)-- node{\localmidarrow} ++(0,-3,-2.9);
+\draw [connection1]  (diff2-anchor)+(0,-3,2.9) -- node{\localmidarrow} ++(0,-3,3);
+
+\draw [connection1]  (diff2-anchor)+(0,-2,-3) -- node{ } ++(0,-2,3);
+\draw [connection1]  (diff2-anchor)+(0,-2,-3)-- node{\localmidarrow} ++(0,-2,-2.9);
+\draw [connection1]  (diff2-anchor)+(0,-2,2.9) -- node{\localmidarrow} ++(0,-2,3);
+%%%%%%%%%%%%%%%%%%
+\draw [connection1]  (diff3-anchor)+(0,3,3) -- node{ } ++(0,-3,3);
+\draw [connection1]  (diff3-anchor)+(0,3,3)-- node{\localmidarrow} ++(0,2.9,3);
+\draw [connection1]  (diff3-anchor)+(0,-2.9,3) -- node{\localmidarrow} ++(0,-3,3);
+ 
+\draw [connection1]  (diff3-anchor)+(0,3,2) -- node{ } ++(0,-3,2);
+\draw [connection1]  (diff3-anchor)+(0,3,2)-- node{\localmidarrow} ++(0,2.9,2);
+\draw [connection1]  (diff3-anchor)+(0,-2.9,2) -- node{\localmidarrow} ++(0,-3,2);
+%%%%%%%%%%%%%%%%%%
+\draw [connection1]  (diff4-anchor)+(0,-3,-3) -- node{ } ++(0,3,-3);
+\draw [connection1]  (diff4-anchor)+(0,-3,-3)-- node{\localmidarrow} ++(0,-2.9,-3);
+\draw [connection1]  (diff4-anchor)+(0,2.9,-3) -- node{\localmidarrow} ++(0,3,-3);
+
+\draw [connection1]  (diff4-anchor)+(0,-3,-2) -- node{ } ++(0,3,-2);
+\draw [connection1]  (diff4-anchor)+(0,-3,-2)-- node{\localmidarrow} ++(0,-2.9,-2);
+\draw [connection1]  (diff4-anchor)+(0,2.9,-2) -- node{\localmidarrow} ++(0,3,-2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw connections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ConvNet Connections\draw [connection]  (crp1-east)    -- node {\midarrow} (crp2-west);
+\draw [connection]  (crp2-east)    -- node {\midarrow} (crp3-west);
+\draw [connection]  (crp3-east)    -- node {\midarrow} (crp4-west);
+\draw [connection]  (crp4-east)    -- node {\midarrow} (crp5-west);
+\draw [connection]  (crp5-east)    -- node {\midarrow} (cp6_7-west);
+\draw [connection]  (cp6_7-east)   -- node {\midarrow} (score32-west);
+\draw [connection]  (score32-east) -- node {\midarrow} (up16-west);
+% Diffusion Block internal connections
+\draw [connection]  (up16-east)    -- node {\midarrow} (diff1-west);
+\draw [connection]  (diff1-east)    -- node {\midarrow} (diff2-west);
+\draw [connection]  (diff2-east)    -- node {\midarrow} (diff3-west);
+\draw [connection]  (diff3-east)    -- node {\midarrow} (diff4-west);
+\draw [connection]  (diff4-east)    -- node {\midarrow} ++(2,0,0);
+
+% EdgeNet Input Connections
+\draw [connection](crp1-south)--node {\midarrow}(edge-west-|crp1-south)--node {\midarrow}(edge-west-|crp2-south);
+\draw [connection](crp2-south)--node {\midarrow}(crp2_upx2-north);
+\draw [connection](crp2_upx2-south)--node {\midarrow}(edge-west-|crp2-south)--node {\midarrow}(edge-west-|crp3-south);
+\draw [connection](crp3-south)--node {\midarrow}(crp3_upx4-north);
+\draw [connection](crp3_upx4-south)--node {\midarrow}(edge-west-|crp3-south)--node {\midarrow}(edge-west);
+% EdgeNet Output Connections
+\draw [connection](edge-east)
+node[anchor=south west,inner sep = 10, yshift=-20, xshift=180,scale=2.3]{Edges}
+--node {\midarrow}(diff4-south |-edge-east)--node {\midarrow}(diff4-south);
+\draw [connection](diff3-south |-edge-east)--node {\midarrow}(diff3-south);
+\draw [connection](diff2-south |-edge-east)--node {\midarrow}(diff2-south);
+\draw [connection](diff1-south |-edge-east)--node {\midarrow}(diff1-south);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{tikzpicture}
+\end{document}

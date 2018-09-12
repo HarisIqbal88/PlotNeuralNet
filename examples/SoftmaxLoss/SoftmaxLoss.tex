@@ -1,0 +1,49 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+%\usepackage{blocks}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\newcommand{\midarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw=\edgecolor] (-0.3,0) -- ++(0.3,0);}
+\newcommand{\up}{0.25}
+\newcommand{\down}{0.25}
+\newcommand{\arrowlength}{4}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Layer Blocks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conv1_1,conv1_2,pool1
+\pic[shift={(0,0,0)},fill={rgb:blue,1.5;red,3.5;green,3.5;white,5}] at (0,0,0) {GenericSequentialLayer={blockname=crp1,%
+    numFilters={{" ",""}},height=20,width={7},depth=20, blocklabel=SoftmaxLoss: $E_\mathcal{S}$ ,ylabel= ,zlabel= }};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw connections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\draw [connection]  (crp1-east)++(0,\up,0) -- node {\midarrow} ++(\arrowlength.0,0) 
+node [anchor=south east,scale=2.1]{$E_\mathcal{S} [p;\theta]$};
+\draw (crp1-west)++(0,\up,0) coordinate (crp1-west-up);
+\draw [connection]  (crp1-west-up)++(-\arrowlength,0,0) 
+node[anchor=south west,scale=2.1]{$p(x^{(t)})$}   
+-- node {\midarrow} (crp1-west-up);  
+
+\draw [connection]  (crp1-west)++(0,-\down,0)     -- node {\midarrow} ++(-\arrowlength.0,0)
+node[anchor=north west,inner sep = 10, xshift=-25,scale=2.3]
+{
+    $\frac{\partial L}{\partial E_\mathcal{S}}\frac{\partial E_\mathcal{S}}{\partial p}$
+};
+\draw (crp1-east)++(0,-\down,0) coordinate (crp1-east-down);
+\draw [connection]  (crp1-east-down)++(\arrowlength,0,0)  
+node[anchor=north east,inner sep = 10, xshift=25,scale=2.3]
+{
+    $\frac{\partial L}{\partial E_\mathcal{S}} = \lambda_\mathcal{S}$
+}   
+-- node {\midarrow} (crp1-east-down);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   		
+
+\end{tikzpicture}
+\end{document}

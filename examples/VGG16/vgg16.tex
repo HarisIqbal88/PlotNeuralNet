@@ -1,0 +1,57 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+%\usepackage{blocks}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\newcommand{\midarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw=\edgecolor] (-0.3,0) -- ++(0.3,0);}
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Layer Blocks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conv1_1,conv1_2,pool1
+\pic[shift={(0,0,0)}] at (0,0,0) {ConvReluPool={blockname=crp1,%
+    numFilters={{"64","64","32"}},height=40,width={2,2},depth=40,ylabel=224,zlabel=224}};
+% conv2_1,conv2_2,pool2
+\pic[shift={(2.1,0,0)}] at (crp1-east) {ConvReluPool={blockname=crp2,%
+    numFilters={{"128","128"}},height=35,width={3,3},depth=35,ylabel=112,zlabel=112}};
+%% conv3_1,conv3_2,conv3_3,pool3
+\pic[shift={(2,0,0)}] at (crp2-east) {ConvReluPool={blockname=crp3,%
+    numFilters={{"256","256","256"}},height=30,width={4,4,4},depth=30,ylabel=56,zlabel=56}};
+%% conv4_1,conv4_2,conv4_3,pool4
+\pic[shift={(1.8,0,0)}] at (crp3-east) {ConvReluPool={blockname=crp4,%
+    numFilters={{"512","512","512"}},height=23,width={7,7,7},depth=23,ylabel=28,zlabel=28}};
+%% conv5_1,conv5_2,conv5_3,pool5
+\pic[shift={(1.5,0,0)}] at (crp4-east) {ConvReluPool={blockname=crp5,%
+    numFilters={{"512","512","512"}},height=15,width={7,7,7},depth=15,ylabel=14,zlabel=14}};
+%% fc6,
+\pic[shift={(1.2,0,0)}] at (crp5-east) {FullyConnectedRelu={blockname=fc6,%
+        numFilters={{"4096","dummy"}},height=10,width={10},depth=10,ylabel=7,zlabel=7}};
+%% fc7
+\pic[shift={(1,0,0)}] at (fc6-east) {FullyConnectedRelu={blockname=fc7,%
+        numFilters={{"4096","dummy"}},height=3,width={10},depth=3,ylabel= ,zlabel=1 }};
+
+%% fc8   
+\pic[shift={(1,0,0)}] at (fc7-east) {FullyConnected={blockname=fc8,%
+        numFilters={{"K","dummy"}},height=3,width=7,depth=3,ylabel=,zlabel=1}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%% Output
+%% Softmax
+%\pic[shift={(1,0,0)}] at (elt2-east) {Deconv={blockname=up8,%
+%        numFilters={{"21","4096"}},height=35,width=1,depth=35,zlabel=I}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw connections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\draw [connection]  (crp1-east)    -- node {\midarrow} (crp2-west);
+\draw [connection]  (crp2-east)    -- node {\midarrow} (crp3-west);
+\draw [connection]  (crp3-east)    -- node {\midarrow} (crp4-west);
+\draw [connection]  (crp4-east)    -- node {\midarrow} (crp5-west);
+\draw [connection]  (crp5-east)    -- node {\midarrow} (fc6-west);
+\draw [connection]  (fc6-east)     -- node {\midarrow} (fc7-west);
+\draw [connection]  (fc7-east)     -- node {\midarrow} (fc8-west);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,107 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+%\usepackage{blocks}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\newcommand{\midarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw=\edgecolor] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Layer Blocks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conv1_1,conv1_2,pool1
+\pic[shift={(0,0,0)}] at (0,0,0) {ConvReluPool={blockname=crp1,%
+    numFilters={{"64","64","32"}},height=40,width={2,2},depth=40,zlabel=I}};
+% conv2_1,conv2_2,pool2
+\pic[shift={(2.1,0,0)}] at (crp1-east) {ConvReluPool={blockname=crp2,%
+    numFilters={{"128","128"}},height=35,width={3,3},depth=35,zlabel=I/2}};
+%% conv3_1,conv3_2,conv3_3,pool3
+\pic[shift={(2,0,0)}] at (crp2-east) {ConvReluPool={blockname=crp3,%
+    numFilters={{"256","256","256"}},height=30,width={4,4,4},depth=30,zlabel=I/4}};
+%% conv4_1,conv4_2,conv4_3,pool4
+\pic[shift={(1.8,0,0)}] at (crp3-east) {ConvReluPool={blockname=crp4,%
+    numFilters={{"512","512","512"}},height=23,width={7,7,7},depth=23,zlabel=I/8}};
+%% conv5_1,conv5_2,conv5_3,pool5
+\pic[shift={(1.5,0,0)}] at (crp4-east) {ConvRelu={blockname=crp5,%
+    numFilters={{"512","512","512"}},height=15,width={7,7,7},depth=15,zlabel=I/16}};
+%% score32    
+\pic[shift={(1,0,0)}] at (crp5-east) {Conv={blockname=score32,%
+        numFilters={{"21","4096"}},height=15,width=1,depth=15,zlabel=I/16}};
+
+%% Upsampling Deconv Layer
+\pic[shift={(2,0,0)}] at (score32-east) {Deconv={blockname=up32,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%Joining with previous streams (fcn-16)
+%% score16
+\pic[shift={(0,0,10)}] at (crp5-anchor) {Conv={blockname=score16,%
+        numFilters={{"1","4096"}},height=20,width=1,depth=20,zlabel=I/8}};
+%% Upsampling Deconv Layer
+\pic[shift={(0.5,0,0)}] at (up32-west) {Deconv={blockname=up16,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%Joining with previous streams (fcn-8)
+%% score8
+\pic[shift={(1,0,14)}] at (crp4-anchor) {Conv={blockname=score8,%
+        numFilters={{"1","4096"}},height=25,width=1,depth=25,zlabel=I/4}};
+
+%% Upsampling Deconv Layer
+\pic[shift={(0.5,0,0)}] at (up16-west) {Deconv={blockname=up8,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=}};    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%Joining with previous streams (fcn-4)
+%% score8
+\pic[shift={(0,0,18)}] at (crp3-east) {Conv={blockname=score4,%
+        numFilters={{"1","4096"}},height=30,width=1,depth=30,zlabel=I/2}};
+%% Upsampling Deconv Layer
+\pic[shift={(0.5,0,0)}] at (up8-west) {Deconv={blockname=up4,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=}};   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%Joining with previous streams (fcn-2)
+%% score8
+\pic[shift={(0,0,22)}] at (crp2-east) {Conv={blockname=score2,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=I}};
+%% Upsampling Deconv Layer
+\pic[shift={(0.5,0,0)}] at (up4-west) {Deconv={blockname=up2,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=I}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Final convolution
+\pic[shift={(3,0,0)}] at (up2-east) {Conv={blockname=output,%
+        numFilters={{"1","4096"}},height=33,width=1,depth=33,zlabel=I}};    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw connections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\draw [connection]  (crp1-east)    -- node {\midarrow} (crp2-west);
+\draw [connection]  (crp2-east)    -- node {\midarrow} (crp3-west);
+\draw [connection]  (crp3-east)    -- node {\midarrow} (crp4-west);
+\draw [connection]  (crp4-east)    -- node {\midarrow} (crp5-west);
+\draw [connection]  (crp5-east)    -- node {\midarrow} (score32-west);
+\draw [connection]  (score32-east) -- node {\midarrow} (up32-west);
+
+\path (crp4-east) -- (crp5-west) coordinate[pos=0.4] (between4_5) ;
+\draw [connection]  (between4_5)    -- node {\midarrow} ++(0,0,10) -- node {\midarrow} (score16-west);
+\draw [connection]  (score16-east) -- node{\midarrow}++(6,0,0)-- node{\midarrow}(up16-out);
+
+\path (crp3-east) -- (crp4-west) coordinate[pos=0.4] (between3_4) ;
+\draw [connection]  (between3_4) -- node {\midarrow} ++(0,0,14) -- node {\midarrow} (score8-west);
+\draw [connection]  (score8-east) -- node{\midarrow}++(11.55,0,0)-- node{\midarrow}(up8-out);
+
+\path (crp2-east) -- (crp3-west) coordinate[pos=0.4] (between2_3) ;
+\draw [connection]  (between2_3) -- node {\midarrow} ++(0,0,18) -- node {\midarrow} (score4-west);
+\draw [connection]  (score4-east) -- node{\midarrow}++(17.3,0,0)-- node{\midarrow}(up4-out);
+
+\path (crp1-east) -- (crp2-west) coordinate[pos=0.4] (between1_2) ;
+\draw [connection]  (between1_2) -- node {\midarrow} ++(0,0,22) -- node {\midarrow} (score2-west);
+\draw [connection]  (score2-east) -- node{\midarrow}++(22.7,0,0)-- node{\midarrow}(up2-out);
+
+\draw [connection]  (up2-east) -- node {\midarrow} (output-west);
+
+\draw [connection]  (output-east) -- node {\midarrow} ++(,0,0);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{tikzpicture}
+\end{document}\grid

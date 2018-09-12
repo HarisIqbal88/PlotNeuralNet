@@ -1,0 +1,42 @@
+\ProvidesPackage{Multiply}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%This Block can draw Elementwise operations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tikzset{Multiply/.pic={\tikzset{/block/.cd,#1}	 	
+
+\draw (0,0,0) circle (\SphereRadius);
+
+\draw (0,0,0) coordinate (\cubeblockname-anchor);
+\draw (\SphereRadius,0,0) coordinate (\cubeblockname-east);
+\draw (-\SphereRadius,0,0) coordinate (\cubeblockname-west);
+\draw (0,\SphereRadius,0) coordinate (\cubeblockname-north);
+\draw (0,-\SphereRadius,0) coordinate (\cubeblockname-south);
+
+\draw[very thick] (-2*\SphereRadius/4,-2*\SphereRadius/4,0) --  (2*\SphereRadius/4,2*\SphereRadius/4,0);
+\draw[very thick] (2*\SphereRadius/4,-2*\SphereRadius/4,0) --  (-2*\SphereRadius/4,2*\SphereRadius/4,0);
+
+\shade[ball color=blue,opacity=0.30] (0,0,0) circle (\SphereRadius);
+
+},
+/block/.search also={/tikz},
+/block/.cd,
+width/.store        in=\cubex,
+height/.store       in=\cubey,
+depth/.store        in=\cubez,
+scale/.store        in=\cubescale,
+numFilters/.store   in=\cubexlabel,
+ylabel/.store       in=\cubeylabel,
+radius/.store       in=\SphereRadius,
+blocklabel/.store   in=\cubeblocklabel,
+blockname/.store    in=\cubeblockname,
+width=2,
+height=13,
+depth=15,
+scale=.2,
+numFilters=,
+ylabel=,
+radius=0.5,
+blocklabel=,
+blockname=,
+}
