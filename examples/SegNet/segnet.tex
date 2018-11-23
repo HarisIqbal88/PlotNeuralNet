@@ -1,0 +1,116 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+%\usepackage{blocks}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Encoder
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conv1_1,conv1_2,pool1
+\pic[shift={(0,0,0)}] at (0,0,0) {ConvReluPool={blockname=crp1,%
+    numFilters={{"64","64","32"}},height=40,width={2,2},depth=40,zlabel=I}};
+% conv2_1,conv2_2,pool2
+\pic[shift={(1.6,0,0)}] at (crp1-east) {ConvReluPool={blockname=crp2,%
+    numFilters={{"128","128"}},height=35,width={2.5,2.5},depth=35,zlabel=I/2}};
+%% conv3_1,conv3_2,conv3_3,pool3
+\pic[shift={(1.2,0,0)}] at (crp2-east) {ConvReluPool={blockname=crp3,%
+    numFilters={{"256","256","256"}},height=30,width={3.3,3.3,3.3},depth=30,zlabel=I/4}};
+%% conv4_1,conv4_2,conv4_3,pool4
+\pic[shift={(1,0,0)}] at (crp3-east) {ConvReluPool={blockname=crp4,%
+    numFilters={{"512","512","512"}},height=23,width={4.5,4.5,4.5},depth=23,zlabel=I/8}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Bottleneck 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% conv5_1,conv5_2,conv5_3
+\pic[shift={(1,0,0)}] at (crp4-east) {ConvRelu={blockname=cp5,%
+        numFilters={{"512","512","512"}},height=12,width={4.5,4.5,4.5},depth=12,zlabel=I/16}};
+
+%% conv5_1r,conv5_2r,conv5_3r
+\pic[shift={(2,0,0)}] at (cp5-east) {ConvRelu={blockname=cp5r,%
+        numFilters={{"512","512","512"}},height=12,width={4.5,4.5,4.5},depth=12,zlabel=I/16}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Dencoder 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% up32
+\pic[shift={(1.5,0,0)}] at (cp5r-east) {UpConvRelu={blockname=ucp4r,%
+        numFilters={{"512","512","512"}},height=23,width={4.5,4.5,4.5},depth=23,zlabel=}};
+
+%% up16
+\pic[shift={(2,0,0)}] at (ucp4r-east) {UpConvRelu={blockname=ucp3r,%
+        numFilters={{"256","256","256"}},height=30,width={3.3,3.3,3.3},depth=30,zlabel=}};
+
+%% up8
+\pic[shift={(2,0,0)}] at (ucp3r-east) {UpConvRelu={blockname=ucp2r,%
+        numFilters={{"128","128"}},height=35,width={2.5,2.5},depth=35,zlabel=}};
+
+   
+%% up4
+\pic[shift={(2,0,0)}] at (ucp2r-east) {UpConvRelu={blockname=ucp1r,%
+        numFilters={{"64","64"}},height=40,width={2,2},depth=40,zlabel=}};
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Draw score producer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% score    
+%\pic[shift={(2,0,0)}] at (ucp1r-east) {Conv={blockname=score,%
+%        numFilters={{"21",""}},height=40,width={2},depth=40,zlabel=I}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Draw connections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\draw [connection]  (crp1-east)    -- node {\midarrow} (crp2-west);
+\draw [connection]  (crp2-east)    -- node {\midarrow} (crp3-west);
+\draw [connection]  (crp3-east)    -- node {\midarrow} (crp4-west);
+\draw [connection]  (crp4-east)    -- node {\midarrow} (cp5-west);
+\draw [connection]  (cp5-east)    -- node {\midarrow} (cp5r-west);
+\draw [connection]  (cp5r-east)    -- node {\midarrow} (ucp4r-west);
+\draw [connection]  (ucp4r-east)    -- node {\midarrow} (ucp3r-west);
+\draw [connection]  (ucp3r-east)    -- node {\midarrow} (ucp2r-west);
+\draw [connection]  (ucp2r-east)    -- node {\midarrow} (ucp1r-west);
+%\draw [connection]  (ucp1r-east)    -- node {\midarrow} (score-west);
+
+
+
+
+\path (crp4-south-|crp4-east) -- (crp4-north-|crp4-east) coordinate[pos=1.15] (crp4-top) ;
+\path (crp3-south-|crp3-east) -- (crp3-north-|crp3-east) coordinate[pos=1.15] (crp3-top) ;
+\path (crp2-south-|crp2-east) -- (crp2-north-|crp2-east) coordinate[pos=1.15] (crp2-top) ;
+\path (crp1-south-|crp1-east) -- (crp1-north-|crp1-east) coordinate[pos=1.15] (crp1-top) ;
+
+\path (ucp4r-upsouth) -- (ucp4r-upnorth) coordinate[pos=1.15] (ucp4r-top) ;
+\path (ucp3r-upsouth) -- (ucp3r-upnorth) coordinate[pos=1.15] (ucp3r-top) ;
+\path (ucp2r-upsouth) -- (ucp2r-upnorth) coordinate[pos=1.15] (ucp2r-top)  ;
+\path (ucp1r-upsouth) -- (ucp1r-upnorth) coordinate[pos=1.15] (ucp1r-top)  ;
+
+\draw [copyconnection]  (crp4-lastnorth-|crp4-east)  
+    -- node {\copymidarrow}(crp4-top)
+    -- node {\copymidarrow}(ucp4r-top)
+    -- node {\copymidarrow} (ucp4r-upnorth);
+\draw [copyconnection]  (crp3-lastnorth-|crp3-east)  
+    -- node {\copymidarrow}(crp3-top)
+    -- node {\copymidarrow}(ucp3r-top)
+    -- node {\copymidarrow} (ucp3r-upnorth);
+\draw [copyconnection]  (crp2-lastnorth-|crp2-east)  
+    -- node {\copymidarrow}(crp2-top)
+    -- node {\copymidarrow}(ucp2r-top)
+    -- node {\copymidarrow} (ucp2r-upnorth);
+\draw [copyconnection]  (crp1-lastnorth-|crp1-east)  
+    -- node {\copymidarrow}(crp1-top)
+    -- node {\copymidarrow}(ucp1r-top)
+    -- node {\copymidarrow} (ucp1r-upnorth);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{tikzpicture}
+\end{document}\grid

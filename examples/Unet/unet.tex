@@ -1,0 +1,138 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+%\usepackage{blocks}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Encoder
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% conv1_1,conv1_2,pool1
+\pic[shift={(0,0,0)}] at (0,0,0) {ConvReluPool={blockname=crp1,%
+    numFilters={{"64","64","32"}},height=40,width={2,2},depth=40,zlabel=I}};
+% conv2_1,conv2_2,pool2
+\pic[shift={(1.6,0,0)}] at (crp1-east) {ConvReluPool={blockname=crp2,%
+    numFilters={{"128","128"}},height=35,width={2.5,2.5},depth=35,zlabel=I/2}};
+%% conv3_1,conv3_2,conv3_3,pool3
+\pic[shift={(1.2,0,0)}] at (crp2-east) {ConvReluPool={blockname=crp3,%
+    numFilters={{"256","256"}},height=30,width={3.3,3.3},depth=30,zlabel=I/4}};
+%% conv4_1,conv4_2,conv4_3,pool4
+\pic[shift={(1,0,0)}] at (crp3-east) {ConvReluPool={blockname=crp4,%
+    numFilters={{"512","512"}},height=23,width={4.5,4.5},depth=23,zlabel=I/8}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bottleneck
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% fc6,fc7
+\pic[shift={(0.9,0,0)}] at (crp4-east) {ConvRelu={blockname=cp6_7,%
+        numFilters={{"1024","1024"}},height=10,width={9,9},depth=10,zlabel=I/16}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Draw Dencoder 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% up32
+\pic[shift={(1.5,0,0)}] at (cp6_7-east) {UpConvRelu={blockname=up32,%
+        numFilters={{"512",""}},height=23,width={4.5},depth=23,zlabel=}};
+%% Concat32
+\pic[shift={(0,0,0)}] at (up32-east) {Gray={blockname=cat32,%
+        numFilters={{"512",""}},height=23,width={4.5},depth=23,zlabel=}};
+%% Conv32    
+\pic[shift={(0.5,0,0)}] at (cat32-east) {ConvRelu={blockname=conv32,%
+        numFilters={{"512","512"}},height=23,width={4.5,4.5},depth=23,zlabel=I/8}};
+
+
+%% up16
+\pic[shift={(2,0,0)}] at (conv32-east) {UpConvRelu={blockname=up16,%
+        numFilters={{"256",""}},height=30,width={3.3},depth=30,zlabel=}};
+%% Concat16
+\pic[shift={(0,0,0)}] at (up16-east) {Gray={blockname=cat16,%
+        numFilters={{"256",""}},height=30,width={3.3},depth=30,zlabel=}};
+%% Conv16    
+\pic[shift={(0.5,0,0)}] at (cat16-east) {ConvRelu={blockname=conv16,%
+        numFilters={{"256","256"}},height=30,width={3.3,3.3},depth=30,zlabel=I/4}};    
+
+
+%% up8
+\pic[shift={(2,0,0)}] at (conv16-east) {UpConvRelu={blockname=up8,%
+        numFilters={{"128",""}},height=35,width={2.5},depth=35,zlabel=}};
+%% Concat8
+\pic[shift={(0,0,0)}] at (up8-east) {Gray={blockname=cat8,%
+        numFilters={{"128",""}},height=35,width={2.5},depth=35,zlabel=}};
+%% Conv8    
+\pic[shift={(0.5,0,0)}] at (cat8-east) {ConvRelu={blockname=conv8,%
+        numFilters={{"128","128"}},height=35,width={2.5,2.5},depth=35,zlabel=I/2}};
+ 
+    
+%% up4
+\pic[shift={(2,0,0)}] at (conv8-east) {UpConvRelu={blockname=up4,%
+        numFilters={{"64",""}},height=40,width={2},depth=40,zlabel=}};
+%% Concat4
+\pic[shift={(0,0,0)}] at (up4-east) {Gray={blockname=cat4,%
+        numFilters={{"64",""}},height=40,width={2},depth=40,zlabel=}};
+
+%% Conv4    
+\pic[shift={(0.5,0,0)}] at (cat4-east) {ConvRelu={blockname=conv4,%
+        numFilters={{"64","64"}},height=40,width={2,2},depth=40,zlabel=I}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Draw score producer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Conv4    
+\pic[shift={(2,0,0)}] at (conv4-east) {Conv={blockname=score,%
+        numFilters={{"21",""}},height=40,width={2},depth=40,zlabel=I}};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Draw connections
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\draw [connection]  (crp1-east)    -- node {\midarrow} (crp2-west);
+\draw [connection]  (crp2-east)    -- node {\midarrow} (crp3-west);
+\draw [connection]  (crp3-east)    -- node {\midarrow} (crp4-west);
+\draw [connection]  (crp4-east)    -- node {\midarrow} (cp6_7-west);
+\draw [connection]  (cp6_7-east)   -- node {\midarrow} (up32-west);
+\draw [connection]  (cat32-east)   -- node {\midarrow} (conv32-west);
+\draw [connection]  (conv32-east)  -- node {\midarrow} (up16-west);
+
+\draw [connection]  (cat16-east)   -- node {\midarrow} (conv16-west);
+\draw [connection]  (conv16-east)   -- node {\midarrow} (up8-west);
+
+\draw [connection]  (cat8-east)    -- node {\midarrow} (conv8-west);
+\draw [connection]  (conv8-east)    -- node {\midarrow} (up4-west);
+
+\draw [connection]  (cat4-east)    -- node {\midarrow} (conv4-west);
+\draw [connection]  (conv4-east)    -- node {\midarrow} (score-west);
+
+\path (crp4-lastsouth) -- (crp4-lastnorth) coordinate[pos=1.25] (crp4-top) ;
+\path (crp3-lastsouth) -- (crp3-lastnorth) coordinate[pos=1.25] (crp3-top) ;
+\path (crp2-lastsouth) -- (crp2-lastnorth) coordinate[pos=1.25] (crp2-top) ;
+\path (crp1-lastsouth) -- (crp1-lastnorth) coordinate[pos=1.25] (crp1-top) ;
+
+\path (cat32-south) -- (cat32-north) coordinate[pos=1.25] (cat32-top) ;
+\path (cat16-south) -- (cat16-north) coordinate[pos=1.25] (cat16-top) ;
+\path (cat8-south)  -- (cat8-north)  coordinate[pos=1.25] (cat8-top)  ;
+\path (cat4-south)  -- (cat4-north)  coordinate[pos=1.25] (cat4-top)  ;
+
+\draw [copyconnection]  (crp4-lastnorth)  
+    -- node {\copymidarrow}(crp4-top)
+    -- node {\copymidarrow}(cat32-top)
+    -- node {\copymidarrow} (cat32-north);
+\draw [copyconnection]  (crp3-lastnorth)  
+    -- node {\copymidarrow}(crp3-top)
+    -- node {\copymidarrow}(cat16-top)
+    -- node {\copymidarrow} (cat16-north);
+\draw [copyconnection]  (crp2-lastnorth)  
+    -- node {\copymidarrow}(crp2-top)
+    -- node {\copymidarrow}(cat8-top)
+    -- node {\copymidarrow} (cat8-north);
+\draw [copyconnection]  (crp1-lastnorth)  
+    -- node {\copymidarrow}(crp1-top)
+    -- node {\copymidarrow}(cat4-top)
+    -- node {\copymidarrow} (cat4-north);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{tikzpicture}
+\end{document}\grid
