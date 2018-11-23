@@ -1,5 +1,5 @@
 # PlotNeuralNet
-Latex code for making neural networks for reports and presentation. Have a look into examples to see how they are made. 
+Latex code for drawing neural networks for reports and presentation. Have a look into examples to see how they are made. Additionally, lets consolidate any improvements that you make and fix any bugs to help more people with this code. 
 Following are some network representations:
 
 <p align="center"><img  src="https://user-images.githubusercontent.com/17570785/47255280-adabab00-d46e-11e8-9978-510a3505f065.png" width="85%" height="85%"></p>
