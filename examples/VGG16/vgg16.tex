@@ -4,54 +4,102 @@
 \subimport{../../layers/}{init}
 \usetikzlibrary{positioning}
 
-\newcommand{\midarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw=\edgecolor] (-0.3,0) -- ++(0.3,0);}
+\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\SoftmaxColor{rgb:magenta,5;black,7}
+
 \begin{document}
 \begin{tikzpicture}
 \tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Draw Layer Blocks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% conv1_1,conv1_2,pool1
-\pic[shift={(0,0,0)}] at (0,0,0) {ConvReluPool={blockname=crp1,%
-    numFilters={{"64","64","32"}},height=40,width={2,2},depth=40,ylabel=224,zlabel=224}};
-% conv2_1,conv2_2,pool2
-\pic[shift={(2.1,0,0)}] at (crp1-east) {ConvReluPool={blockname=crp2,%
-    numFilters={{"128","128"}},height=35,width={3,3},depth=35,ylabel=112,zlabel=112}};
-%% conv3_1,conv3_2,conv3_3,pool3
-\pic[shift={(2,0,0)}] at (crp2-east) {ConvReluPool={blockname=crp3,%
-    numFilters={{"256","256","256"}},height=30,width={4,4,4},depth=30,ylabel=56,zlabel=56}};
-%% conv4_1,conv4_2,conv4_3,pool4
-\pic[shift={(1.8,0,0)}] at (crp3-east) {ConvReluPool={blockname=crp4,%
-    numFilters={{"512","512","512"}},height=23,width={7,7,7},depth=23,ylabel=28,zlabel=28}};
-%% conv5_1,conv5_2,conv5_3,pool5
-\pic[shift={(1.5,0,0)}] at (crp4-east) {ConvReluPool={blockname=crp5,%
-    numFilters={{"512","512","512"}},height=15,width={7,7,7},depth=15,ylabel=14,zlabel=14}};
-%% fc6,
-\pic[shift={(1.2,0,0)}] at (crp5-east) {FullyConnectedRelu={blockname=fc6,%
-        numFilters={{"4096","dummy"}},height=10,width={10},depth=10,ylabel=7,zlabel=7}};
-%% fc7
-\pic[shift={(1,0,0)}] at (fc6-east) {FullyConnectedRelu={blockname=fc7,%
-        numFilters={{"4096","dummy"}},height=3,width={10},depth=3,ylabel= ,zlabel=1 }};
+% conv1_1,conv1_2
+\pic[shift={(0,0,0)}] at (0,0,0) {RightBandedBox={name=cr1,caption=conv1,%
+        xlabel={{"64","64"}},ylabel=224,zlabel=224,fill=\ConvColor,bandfill=\ConvReluColor,%
+        height=40,width={2,2},depth=40}};
+%pool1
+\pic[shift={(0,0,0)}] at (cr1-east) {Box={name=p1,%
+        fill=\PoolColor,opacity=0.5,height=35,width=1,depth=35}};
+%%%%%%%%%%
+% conv2_1,conv2_2
+\pic[shift={(2,0,0)}] at (p1-east) {RightBandedBox={name=cr2,caption=conv2,%
+        xlabel={{"64","64"}},zlabel=112,fill=\ConvColor,bandfill=\ConvReluColor,%
+        height=35,width={3,3},depth=35}};
+%pool2
+\pic[shift={(0,0,0)}] at (cr2-east) {Box={name=p2,%
+        fill=\PoolColor,opacity=0.5,height=30,width=1,depth=30}};
+%%%%%%%%%%
+% conv3_1,conv3_2
+\pic[shift={(2,0,0)}] at (p2-east) {RightBandedBox={name=cr3,caption=conv3,%
+        xlabel={{"256","256","256"}},zlabel=56,fill=\ConvColor,bandfill=\ConvReluColor,%
+        height=30,width={4,4,4},depth=30}};
+%pool3
+\pic[shift={(0,0,0)}] at (cr3-east) {Box={name=p3,%
+        fill=\PoolColor,opacity=0.5,height=23,width=1,depth=23}};
+%%%%%%%%%%
+% conv4_1,conv4_2,conv4_3
+\pic[shift={(1.8,0,0)}] at (p3-east) {RightBandedBox={name=cr4,caption=conv4,%
+        xlabel={{"512","512","512"}},zlabel=28,fill=\ConvColor,bandfill=\ConvReluColor,%
+        height=23,width={7,7,7},depth=23}};
+%pool4
+\pic[shift={(0,0,0)}] at (cr4-east) {Box={name=p4,%
+        fill=\PoolColor,opacity=0.5,height=15,width=1,depth=15}};
+%%%%%%%%%%
+% conv5_1,conv5_2,conv5_3
+\pic[shift={(1.5,0,0)}] at (p4-east) {RightBandedBox={name=cr5,caption=conv5,%
+        xlabel={{"512","512","512"}},zlabel=14,fill=\ConvColor,bandfill=\ConvReluColor,%
+        height=15,width={7,7,7},depth=15}};
+%pool5
+\pic[shift={(0,0,0)}] at (cr5-east) {Box={name=p5,%
+        fill=\PoolColor,opacity=0.5,height=10,width=1,depth=10}};
+%%%%%%%%%%
+% fc6
+\pic[shift={(3,0,0)}] at (p5-east) {RightBandedBox={name=fc6,caption=fc6,%
+        xlabel={{"1",""}},zlabel=4096,fill=\FcColor,bandfill=\FcReluColor,%
+        height=3,width=3,depth=100}};
+%%%%%%%%%%
+% fc7
+\pic[shift={(2,0,0)}] at (fc6-east) {RightBandedBox={name=fc7,caption=fc7,%
+        xlabel={{"1","dummy"}},zlabel=4096,fill=\FcColor,bandfill=\FcReluColor,%
+        height=3,width=3,depth=100}};
+%%%%%%%%%%
+% fc8
+\pic[shift={(1.5,0,0)}] at (fc7-east) {RightBandedBox={name=fc8,caption=fc8+softmax,%
+        xlabel={{"1","dummy"}},fill=\FcColor,bandfill=\FcReluColor,%
+        height=3,width=3,depth=25}};
 
-%% fc8   
-\pic[shift={(1,0,0)}] at (fc7-east) {FullyConnected={blockname=fc8,%
-        numFilters={{"K","dummy"}},height=3,width=7,depth=3,ylabel=,zlabel=1}};
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-%% Output
-%% Softmax
-%\pic[shift={(1,0,0)}] at (elt2-east) {Deconv={blockname=up8,%
-%        numFilters={{"21","4096"}},height=35,width=1,depth=35,zlabel=I}};
+%%%%%%%%%%
+% softmax
+\pic[shift={(0,0,0)}] at (fc8-east) {Box={name=softmax,%
+        xlabel={{"","dummy"}},zlabel=K,opacity=0.8,fill=\SoftmaxColor,%
+        height=3,width=1.5,depth=25}};
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Draw connections
+%% Draw Arrow Connections
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\draw [connection]  (crp1-east)    -- node {\midarrow} (crp2-west);
-\draw [connection]  (crp2-east)    -- node {\midarrow} (crp3-west);
-\draw [connection]  (crp3-east)    -- node {\midarrow} (crp4-west);
-\draw [connection]  (crp4-east)    -- node {\midarrow} (crp5-west);
-\draw [connection]  (crp5-east)    -- node {\midarrow} (fc6-west);
-\draw [connection]  (fc6-east)     -- node {\midarrow} (fc7-west);
-\draw [connection]  (fc7-east)     -- node {\midarrow} (fc8-west);
+\draw [connection]  (p1-east)        -- node {\midarrow} (cr2-west);
+\draw [connection]  (p2-east)        -- node {\midarrow} (cr3-west);
+\draw [connection]  (p3-east)        -- node {\midarrow} (cr4-west);
+\draw [connection]  (p4-east)        -- node {\midarrow} (cr5-west);
+\draw [connection]  (p5-east)        -- node {\midarrow} (fc6-west);
+\draw [connection]  (fc6-east)       -- node {\midarrow} (fc7-west);
+\draw [connection]  (fc7-east)       -- node {\midarrow} (fc8-west);
+\draw [connection]  (softmax-east)   -- node {\midarrow} ++(1.5,0,0);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%% Draw Dotted Edges 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\draw[densely dashed]
+    (fc6-west)++(0, 1.5*.2, 1.5*.2) coordinate(a) -- (p5-nearnortheast)
+    (fc6-west)++(0,-1.5*.2, 1.5*.2) coordinate(b) -- (p5-nearsoutheast)
+    (fc6-west)++(0,-1.5*.2,-1.5*.2) coordinate(c) -- (p5-farsoutheast)
+    (fc6-west)++(0, 1.5*.2,-1.5*.2) coordinate(d) -- (p5-farnortheast)
+    
+    (a)--(b)--(c)--(d)
+    ;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{tikzpicture}
 \end{document}

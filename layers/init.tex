@@ -2,34 +2,10 @@
 \usetikzlibrary{quotes,arrows.meta}
 \usetikzlibrary{positioning}
 
-\newcommand*{\SecondLastLayerOriginX}{No value}
 \def\edgecolor{rgb:blue,4;red,1;green,4;black,3}
 \newcommand{\midarrow}{\tikz \draw[-Stealth,line width =0.8mm,draw=\edgecolor] (-0.3,0) -- ++(0.3,0);}
 
-\tikzstyle{conv}  =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.4, pic actions, fill={rgb:yellow,5;red,2.5;white,5}]
-\tikzstyle{relu}  =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.6, pic actions, fill={rgb:yellow,5;red,5;white,5},draw={rgb:yellow,5;red,5;white,5}]
-\tikzstyle{pool}  =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.6, pic actions, fill={rgb:red,1;black,0.3}]% colour coeff will be normalized to 1
-\tikzstyle{deconv}=[every edge/.append style={pic actions, densely dashed, opacity=.5},fill opacity=0.7, pic actions, fill={rgb:blue,5;green,2.5;white,5}]
-\tikzstyle{gray}=[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.4, pic actions, fill={rgb:black,5;white,5}]
-\tikzstyle{up}=[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.5, pic actions, fill={rgb:blue,5;green,2.5;white,1}]
-\tikzstyle{layer} =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.4, pic actions]
-\tikzstyle{fullyconn}  =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.4, pic actions, fill={rgb:blue,5;red,2.5;white,5}]
-\tikzstyle{fullyrelu}  =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.6, pic actions, fill={rgb:blue,5;red,5;white,4},draw={rgb:blue,5;red,5;white,4}]
-\tikzstyle{DT}  =[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=0.4, pic actions, fill={rgb:blue,1;red,2;green,4;white,7}]
-
-\usepackage{ConvReluPool}
-\usepackage{Gray}
-\usepackage{ConvRelu}
-\usepackage{Conv}
-\usepackage{Deconv}
-\usepackage{UpConvRelu}
-\usepackage{Up}
-%\usepackage{Eltwise}
-\usepackage{Multiply}
-\usepackage{Sum}
-\usepackage{SigmaSum}
-\usepackage{FullyConnected}
-\usepackage{FullyConnectedRelu}
-\usepackage{DomainTransform}
-\usepackage{GenericSequentialLayer}
+\usepackage{Ball}
+\usepackage{Box}
+\usepackage{RightBandedBox}
 

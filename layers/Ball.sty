@@ -1,0 +1,40 @@
+\ProvidesPackage{Ball}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%This Block can draw small Ball
+%Elementwise or reduction operations can be drawn with this
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tikzset{Ball/.pic={\tikzset{/sphere/.cd,#1}	 	
+
+\pgfmathsetmacro{\r}{\radius*\scale}
+
+\shade[ball color=\fill,opacity=\opacity] (0,0,0) circle (\r);
+\draw (0,0,0) circle [radius=\r] node[scale=4*\r] {\logo};
+
+\coordinate (\name-anchor) at ( 0 , 0  , 0) ;
+\coordinate (\name-east)   at ( \r, 0  , 0) ;
+\coordinate (\name-west)   at (-\r, 0  , 0) ;
+\coordinate (\name-north)  at ( 0 , \r , 0) ;
+\coordinate (\name-south)  at ( 0 , -\r, 0) ;
+
+\path (\name-south) + (0,-20pt) coordinate (caption-node) 
+edge ["\textcolor{black}{\bf \caption}"'] (caption-node); %Ball caption
+
+},
+/sphere/.search also={/tikz},
+/sphere/.cd,
+radius/.store       in=\radius,
+scale/.store        in=\scale,
+caption/.store      in=\caption,
+name/.store         in=\name,
+fill/.store         in=\fill,
+logo/.store         in=\logo,
+opacity/.store      in=\opacity,
+logo=$\Sigma$,
+fill=green,
+opacity=0.10,
+scale=0.2,
+radius=0.5,
+caption=,
+name=,
+}
