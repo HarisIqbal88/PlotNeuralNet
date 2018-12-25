@@ -1,5 +1,5 @@
 # PlotNeuralNet
-[![DOI](https://zenodo.org/badge/142187665.svg)](https://zenodo.org/badge/latestdoi/142187665)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2526396.svg)](https://doi.org/10.5281/zenodo.2526396)
 
 Latex code for drawing neural networks for reports and presentation. Have a look into examples to see how they are made. Additionally, lets consolidate any improvements that you make and fix any bugs to help more people with this code. 
 Following are some network representations:
