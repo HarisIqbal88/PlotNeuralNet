@@ -149,7 +149,7 @@ def to_SoftMax( name, s_filer=10, offset="(0,0,0)", to="(0,0,0)", width=1.5, hei
     {Box={
         name=""" + name +""",
         caption="""+ caption +""",
-        xlabel={{"","dummy"}},
+        xlabel={{" ","dummy"}},
         zlabel="""+ str(s_filer) +""",
         fill=\SoftmaxColor,
         opacity="""+ str(opacity) +""",
