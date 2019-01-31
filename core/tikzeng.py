@@ -8,6 +8,7 @@ def to_head( projectpath ):
 \usepackage{import}
 \subimport{"""+ pathlayers + r"""}{init}
 \usetikzlibrary{positioning}
+\usetikzlibrary{3d} %for including external image 
 """
 
 def to_cor():
@@ -31,9 +32,12 @@ def to_begin():
 \tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
 """
 
-
-
 # layers definition
+
+def to_input( pathfile, to='(-3,0,0)', width=8, height=8 ):
+    return r"""
+\node[canvas is zy plane at x=0] (temp) at """+ to +""" {\includegraphics[width="""+ str(width)+"cm"+""",height="""+ str(height)+"cm"+"""]{"""+ pathfile +"""}};
+"""
 
 # Conv
 def to_Conv( name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" " ):
