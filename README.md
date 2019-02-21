@@ -21,7 +21,7 @@ Latex code for drawing neural networks for reports and presentation. Have a look
 
         import sys
         sys.path.append('../')
-        from core.tikzeng import *
+        from pycore.tikzeng import *
 
         # defined your arch
         arch = [
