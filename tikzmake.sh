@@ -7,5 +7,5 @@ pdflatex $1.tex
 rm *.aux *.log *.vscodeLog
 rm *.tex
 
-evince $1.pdf
+xdg-open $1.pdf
 

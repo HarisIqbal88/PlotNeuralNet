@@ -1,8 +1,8 @@
 
 import sys
 sys.path.append('../')
-from core.tikzeng import *
-from core.blocks  import *
+from pycore.tikzeng import *
+from pycore.blocks  import *
 
 arch = [ 
     to_head('..'), 
