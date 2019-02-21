@@ -1,0 +1,12 @@
+image:
+  file: Dockerfile
+tasks:
+- before: >
+    cd test
+  command: >
+    python unet.py &&
+    pdflatex unet.tex &&
+    rm *.aux *.log *.tex &&
+    sleep 12 &&
+    gp open unet.pdf &&
+    cd ..
