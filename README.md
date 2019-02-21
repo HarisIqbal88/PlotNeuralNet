@@ -6,11 +6,14 @@ Latex code for drawing neural networks for reports and presentation. Have a look
 ## TODO
 
 - [X] Python interfaz
-- [ ] Generate Pytorch graph architecture
 - [ ] Add easy legend functionality
 - [ ] Add more layer shapes like TruncatedPyramid, 2DSheet etc
+- [ ] Add examples for RNN and likes.
 
-## Usage
+## Latex Usage
+    see examples
+    
+## PyUsage
 
     mkdir my_project
     cd my_project
