@@ -1,11 +1,11 @@
 # PlotNeuralNet
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2526396.svg)](https://doi.org/10.5281/zenodo.2526396)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2526396.svg)](https://doi.org/10.5281/zenodo.2526396) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/HarisIqbal88/PlotNeuralNet/master)
 
 Latex code for drawing neural networks for reports and presentation. Have a look into examples to see how they are made. Additionally, lets consolidate any improvements that you make and fix any bugs to help more people with this code.
 
 ## TODO
 
-- [X] Python interfaz
+- [X] Python interface
 - [ ] Add easy legend functionality
 - [ ] Add more layer shapes like TruncatedPyramid, 2DSheet etc
 - [ ] Add examples for RNN and likes.
