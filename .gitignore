@@ -1,3 +1,10 @@
+.idea/
+*.pyc
+dist/
+build/
+plotnn.egg-info/
+pyexamples/*.pdf
+
 *.aux
 *.log
 *.gz
