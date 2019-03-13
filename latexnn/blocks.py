@@ -1,5 +1,5 @@
 
-from .tikzeng import *
+from .layers import *
 
 #define new block
 def block_2ConvPool( name, botton, top, s_filer=256, n_filer=64, offset="(1,0,0)", size=(32,32,3.5), opacity=0.5 ):

@@ -1,16 +1,9 @@
-
 import sys
-sys.path.append('../')
-from pycore.tikzeng import *
-from pycore.blocks  import *
+from latexnn import *
 
 arch = [ 
-    to_head('..'), 
-    to_cor(),
-    to_begin(),
-    
     #input
-    to_input( '../examples/fcn8s/cats.jpg' ),
+    to_input('../examples/fcn8s/cats.jpg'),
 
     #block-001
     to_ConvConvRelu( name='ccr_b1', s_filer=500, n_filer=(64,64), offset="(0,0,0)", to="(0,0,0)", width=(2,2), height=40, depth=40  ),
@@ -37,15 +30,13 @@ arch = [
     to_skip( of='ccr_b1', to='ccr_res_b9', pos=1.25),
     
     to_ConvSoftMax( name="soft1", s_filer=512, offset="(0.75,0,0)", to="(end_b9-east)", width=1, height=40, depth=40, caption="SOFT" ),
-    to_connection( "end_b9", "soft1"),
-     
-    to_end() 
+    to_connection( "end_b9", "soft1")
     ]
 
 
 def main():
     namefile = str(sys.argv[0]).split('.')[0]
-    to_generate(arch, namefile + '.tex' )
+    to_pdf(arch, namefile + '.pdf' )
 
 if __name__ == '__main__':
     main()
