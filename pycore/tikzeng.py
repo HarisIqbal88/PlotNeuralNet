@@ -173,7 +173,7 @@ def to_connection( of, to):
 def to_skip( of, to, pos=1.25):
     return r"""
 \path ("""+ of +"""-southeast) -- ("""+ of +"""-northeast) coordinate[pos="""+ str(pos) +"""] ("""+ of +"""-top) ;
-\path ("""+ to +"""-south)  -- ("""+ to +"""-north)  coordinate[pos=1.25] ("""+ to +"""-top) ;
+\path ("""+ to +"""-south)  -- ("""+ to +"""-north)  coordinate[pos="""+ str(pos) +"""] ("""+ to +"""-top) ;
 \draw [copyconnection]  ("""+of+"""-northeast)  
 -- node {\copymidarrow}("""+of+"""-top)
 -- node {\copymidarrow}("""+to+"""-top)
