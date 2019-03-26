@@ -1,8 +1,12 @@
 
 import os
+import sys
 
 def to_head( projectpath ):
     pathlayers = os.path.join( projectpath, 'layers/' )
+    if sys.platform.startswith('win'):
+        # for windows the latex need '/' in "path/layers"
+        pathlayers = pathlayers.replace('\\', '/')
     return r"""
 \documentclass[border=8pt, multi, tikz]{standalone} 
 \usepackage{import}
