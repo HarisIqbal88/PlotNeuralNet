@@ -3,6 +3,27 @@
 
 Latex code for drawing neural networks for reports and presentation. Have a look into examples to see how they are made. Additionally, lets consolidate any improvements that you make and fix any bugs to help more people with this code.
 
+## Getting Started
+1. Install the following packages on Ubuntu.
+    * Ubuntu 16.04
+        ```
+        sudo apt-get install texlive-latex-extra
+        ```
+
+    * Ubuntu 18.04.2
+Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), please install the following packages.
+        ```
+        sudo apt-get install texlive-latex-base
+        sudo apt-get install texlive-fonts-recommended
+        sudo apt-get install texlive-fonts-extra
+        sudo apt-get install texlive-latex-extra
+        ```
+2. Execute the example as followed.
+    ```
+    cd pyexamples/
+    bash ../tikzmake.sh test_simple
+    ```
+
 ## TODO
 
 - [X] Python interfaz
@@ -61,7 +82,5 @@ Following are some network representations:
 
 <p align="center"><img  src="https://user-images.githubusercontent.com/17570785/50308911-03b3c380-049d-11e9-92d9-ce15669017ad.png" width="85%" height="85%"></p>
 <h6 align="center">Holistically-Nested Edge Detection</h6>
-
-
 
 
