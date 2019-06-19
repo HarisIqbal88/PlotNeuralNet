@@ -1,0 +1,8 @@
+input(32, 32, 1)
+conv(28, 28, 6)
+pool(14, 14, 6)
+conv(10, 10, 16)
+pool(5, 5, 16)
+conv(1,1,120)
+fullyconn(1,1,84)
+softmax(1,1,10)
