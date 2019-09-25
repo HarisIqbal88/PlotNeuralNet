@@ -33,8 +33,9 @@ Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), p
 
 ## ADD by ME --modified
 
--[X] to_BN() batch norm with brown color
--[X] to_FulCon() fully connected layer with blue
+- [X] to_BN() batch norm with brown color
+
+- [X] to_FulCon() fully connected layer with blue
 
 check [`Deep4-net`](Deep4-net)
 
