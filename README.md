@@ -32,6 +32,7 @@ Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), p
 - [ ] Add examples for RNN and likes.
 
 ## ADD by ME --modified
+
 -[X] to_BN() batch norm with brown color
 -[X] to_FulCon() fully connected layer with blue
 
