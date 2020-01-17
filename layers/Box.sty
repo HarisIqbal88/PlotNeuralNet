@@ -10,7 +10,7 @@
         \pgfmathsetmacro{\y}{\cubey*\scale}
         \pgfmathsetmacro{\z}{\cubez*\scale}
    
-        %Multiple concatenated boxes	 	  	
+        %Multiple concatenated boxes
         \foreach[count=\i,%
                  evaluate=\i as \xlabel using {array({\boxlabels},\i-1)},% 
                  evaluate=\unscaledx as \k using {\unscaledx*\scale+\prev}, remember=\k as \prev (initially 0)] 
@@ -25,7 +25,7 @@
             \coordinate (f) at (\k    ,-\y/2 ,-\z/2); 
             \coordinate (g) at (\k-\x ,-\y/2 ,-\z/2); 
             \coordinate (h) at (\k-\x , \y/2 ,-\z/2); 
-             			
+        
             \draw [box] 
                 (d) -- (a) -- (b) -- (c) -- cycle     
                 (d) -- (a) -- (h) -- (e) -- cycle
@@ -33,7 +33,7 @@
                 (f) edge (g)
                 (b) edge (g)
                 (h) edge (g)    
-            ;     	
+            ;
             \path (b) edge ["\xlabel"',midway] (c);
             
             \xdef\LastEastx{\k} %\k persists as \LastEastx after loop 
@@ -45,7 +45,7 @@
         \tikzstyle{depthlabel}=[pos=0,text width=14*\z,text centered,sloped]       
         
         \path (c) edge ["\small\zlabel"',depthlabel](f); %depth label
-        \path (b1) edge ["\ylabel",midway] (a1);  %height label 	  
+        \path (b1) edge ["\ylabel",midway] (a1);  %height label
         
         
         \tikzstyle{captionlabel}=[text width=15*\LastEastx/\scale,text centered]       
