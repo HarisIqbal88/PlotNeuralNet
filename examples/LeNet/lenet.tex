@@ -1,0 +1,152 @@
+\documentclass[border=8pt, multi, tikz]{standalone} 
+\usepackage{import}
+\subimport{../layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d} %for including external image 
+
+
+\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
+\def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\SoftmaxColor{rgb:magenta,5;black,7}   
+
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+
+
+\pic[shift={(0,0,0)}] at (0,0,0) 
+    {Box={
+        name=conv0,
+        caption= ,
+        xlabel={{1, }},
+        zlabel=32,
+        fill=\ConvColor,
+        height=32,
+        width=1,
+        depth=32
+        }
+    };
+
+
+\pic[shift={(1,0,0)}] at (conv0-east) 
+    {Box={
+        name=conv1,
+        caption= ,
+        xlabel={{6, }},
+        zlabel=28,
+        fill=\ConvColor,
+        height=28,
+        width=6,
+        depth=28
+        }
+    };
+
+
+\draw [connection]  (conv0-east)    -- node {\midarrow} (conv1-west);
+
+
+\pic[shift={ (0,0,0) }] at (conv1-east) 
+    {Box={
+        name=pool1,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=14,
+        width=6,
+        depth=14
+        }
+    };
+
+
+\pic[shift={(1,0,0)}] at (pool1-east) 
+    {Box={
+        name=conv2,
+        caption= ,
+        xlabel={{16, }},
+        zlabel=10,
+        fill=\ConvColor,
+        height=10,
+        width=16,
+        depth=10
+        }
+    };
+
+
+\draw [connection]  (pool1-east)    -- node {\midarrow} (conv2-west);
+
+
+\pic[shift={ (0,0,0) }] at (conv2-east) 
+    {Box={
+        name=pool2,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=5,
+        width=16,
+        depth=5
+        }
+    };
+
+
+\pic[shift={(1,0,0)}] at (pool2-east) 
+    {Box={
+        name=conv3,
+        caption= ,
+        xlabel={{1, }},
+        zlabel=120,
+        fill=\ConvColor,
+        height=1,
+        width=1,
+        depth=120
+        }
+    };
+
+
+\draw [connection]  (pool2-east)    -- node {\midarrow} (conv3-west);
+
+
+\pic[shift={(2,0,0)}] at (conv3-east) 
+    {Box={
+        name=conv4,
+        caption= ,
+        xlabel={{1, }},
+        zlabel=84,
+        fill=\ConvColor,
+        height=1,
+        width=1,
+        depth=84
+        }
+    };
+
+
+\draw [connection]  (conv3-east)    -- node {\midarrow} (conv4-west);
+
+
+\pic[shift={(3,0,0)}] at (conv4-east) 
+    {Box={
+        name=soft1,
+        caption=SOFT,
+        xlabel={{" ","dummy"}},
+        zlabel=10,
+        fill=\SoftmaxColor,
+        opacity=0.8,
+        height=3,
+        width=1.5,
+        depth=25
+        }
+    };
+
+
+\draw [connection]  (conv4-east)    -- node {\midarrow} (soft1-west);
+
+
+\end{tikzpicture}
+\end{document}
