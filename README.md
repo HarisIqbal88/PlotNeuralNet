@@ -55,6 +55,10 @@ Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), p
 
 See [`examples`](examples) directory for usage.
 
+## Docker usage
+
+See [docker-plotneuralnet](https://github.com/JackMcKew/docker-plotneuralnet) repository for usage.
+
 ## Python usage
 
 First, create a new directory and a new Python file:
