@@ -1,6 +1,9 @@
 *.aux
 *.log
 *.gz
+*.pdf
+*.png
+*.DS_Store
 
 __pycache__
 books

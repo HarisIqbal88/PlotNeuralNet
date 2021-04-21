@@ -8,7 +8,7 @@ arch = [
     to_head( '..' ),
     to_cor(),
     to_begin(),
-    to_input( '../examples/fcn8s/cats.jpg', to="(-.5,0,0)", height=1.5, width=1.5),
+    to_input( '../examples/fcn8s/A.png', to="(-.5,0,0)", height=1.5, width=1.5),
     to_Conv("conv1", 32, 1, offset="(0,0,0)", to="(0,0,0)", height=8, depth=8, width=2 ),
     to_ReLU("relu1", offset="(0,0,0)", to="(conv1-east)", height=8, depth=8, width=2),
     to_Conv("conv2", 32, 1, offset="(1.5,0,0)", to="(relu1-east)", height=8, depth=8, width=2 ),
