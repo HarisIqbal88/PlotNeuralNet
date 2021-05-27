@@ -181,13 +181,27 @@ def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
         ny="""+str(1)+""",
         nz="""+str(1)+""",
         radius="""+ str(radius) +""",
-        logo=$+$
+%        logo=$+$
         }
     };
 """
 
-def to_FullConn( name, nx=0, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=2.5, width=10, height=10, depth=10, caption=" ", opacity=0.6 ):
+def to_FullConn( name, nx=2, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=2.5, width=10, height=10, depth=10, caption=" ", opacity=0.6, numLogoX=1, numLogoY=3, numLogoZ=1, logo=[1,2,3], pad="..." ):
+    finalLogo = []
+    n=0
+    for i in range(nx):
+        for j in range(ny):
+            for k in range(nz):
+                if i < numLogoX and j < numLogoY and k >= nz-numLogoZ:
+                    print(k,nz-numLogoZ)
+                    finalLogo.append(logo[n])
+                    n+=1
+                    if n>=len(logo):
+                        n=0
+                else:
+                    finalLogo.append(pad)        
     return r"""
+\def\logo{{"""+",".join([ '"{}"'.format(x) for x in finalLogo ])+"""}},
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Ball={
         name=""" + name +""",
@@ -201,7 +215,6 @@ def to_FullConn( name, nx=0, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=
         ny="""+str(ny)+""",
         nz="""+str(nz)+""",
         radius="""+ str(radius) +""",
-        logo=
        }
     };
 """
