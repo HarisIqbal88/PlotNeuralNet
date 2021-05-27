@@ -19,6 +19,7 @@ def to_cor():
 \def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
 \def\FcColor{rgb:blue,5;red,2.5;white,5}
 \def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
 \def\SoftmaxColor{rgb:magenta,5;black,7}   
 \def\SumColor{rgb:blue,5;green,15}
 """
@@ -182,6 +183,26 @@ def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
         radius="""+ str(radius) +""",
         logo=$+$
         }
+    };
+"""
+
+def to_FullConn( name, nx=0, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=2.5, width=10, height=10, depth=10, caption=" ", opacity=0.6 ):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Ball={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        fill=\FcColor,
+        opacity="""+ str(opacity) +""",
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +""" ,
+        nx="""+str(nx)+""",
+        ny="""+str(ny)+""",
+        nz="""+str(nz)+""",
+        radius="""+ str(radius) +""",
+        logo=
+       }
     };
 """
 
