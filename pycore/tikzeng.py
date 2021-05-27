@@ -181,7 +181,7 @@ def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
 
 def to_connection( of, to):
     return r"""
-\draw [connection]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
+\filldraw [connection, gray]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
 """
 
 def to_skip( of, to, pos=1.25):
