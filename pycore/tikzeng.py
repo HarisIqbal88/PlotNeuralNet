@@ -170,8 +170,15 @@ def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Ball={
         name=""" + name +""",
+        caption="",
         fill=\SumColor,
         opacity="""+ str(opacity) +""",
+        height="""+ str(radius) +""",
+        width="""+ str(radius) +""",
+        depth="""+ str(radius) +""" ,
+        nx="""+str(1)+""",
+        ny="""+str(1)+""",
+        nz="""+str(1)+""",
         radius="""+ str(radius) +""",
         logo=$+$
         }
@@ -179,9 +186,9 @@ def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
 """
 
 
-def to_connection( of, to):
+def to_connection( of, to, color="black"):
     return r"""
-\filldraw [connection, gray]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
+\draw [connection, draw="""+color+"""]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
 """
 
 def to_skip( of, to, pos=1.25):
