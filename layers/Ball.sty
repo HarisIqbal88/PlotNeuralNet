@@ -14,35 +14,36 @@
 \pgfmathsetmacro{\z}{\cubez*\scale}      
 
 \ifnum \nx=1
-\pgfmathsetmacro{\xdelta}{0}
+   \pgfmathsetmacro{\xdelta}{0}
 \else
-\pgfmathsetmacro{\xdelta}{(\x-2*\r)/(\nx-1)}
+   \pgfmathsetmacro{\xdelta}{(\x-2*\r)/(\nx-1)}
 \fi
 
 \ifnum \ny=1
-\pgfmathsetmacro{\ydiff}{0}
-\pgfmathsetmacro{\ydelta}{0}
+   \pgfmathsetmacro{\ydiff}{0}
+   \pgfmathsetmacro{\ydelta}{0}
 \else
-\pgfmathsetmacro{\ydiff}{(\y-2*\r)/2}\
-\pgfmathsetmacro{\ydelta}{(\y-2*\r)/(\ny-1)}
+   \pgfmathsetmacro{\ydiff}{(\y-2*\r)/2}\
+   \pgfmathsetmacro{\ydelta}{(\y-2*\r)/(\ny-1)}
 \fi
 
 \ifnum \nz=1
-\pgfmathsetmacro{\zdiff}{0}
-\pgfmathsetmacro{\zdelta}{0}
+   \pgfmathsetmacro{\zdiff}{0}
+   \pgfmathsetmacro{\zdelta}{0}
 \else
-\pgfmathsetmacro{\zdiff}{(\z-2*\r)/2}\
-\pgfmathsetmacro{\zdelta}{(\z-2*\r)/(\nz-1)}
+   \pgfmathsetmacro{\zdiff}{(\z-2*\r)/2}\
+   \pgfmathsetmacro{\zdelta}{(\z-2*\r)/(\nz-1)}
 \fi
 
 \foreach \i in {1, ..., \nx} {
   \pgfmathsetmacro{\xoff}{(\i-1)*\xdelta+\r}
   \foreach \j in {1, ..., \ny} {
-    \pgfmathsetmacro{\yoff}{(\j-1)*\ydelta-\ydiff}  
+    \pgfmathsetmacro{\yoff}{(\j-1)*\ydelta-\ydiff}
     \foreach \k in {1, ..., \nz} {
       \pgfmathsetmacro{\zoff}{(\k-1)*\zdelta-\zdiff}  
+      \pgfmathsetmacro{\label}{\logo[(\i-1)*(\ny*\nz)+(\j-1)*(\nz)+(\k-1)]}
       \shade[ball color=\fill, opacity=\opacity] (\xoff,\yoff,\zoff) circle (\r);
-      \draw (\xoff,\yoff,\zoff) circle [radius=\r] node[scale=4*\r] {\logo};
+      \draw (\xoff,\yoff,\zoff) circle [radius=\r] node[scale=4*\r] {\label};
       \coordinate (\name+\i+\j+\k-anchor) at ( \xoff , \yoff  , \zoff) ;
       \coordinate (\name+\i+\j+\k-east)   at ( \xoff+\r, \yoff  , \zoff) ;
       \coordinate (\name+\i+\j+\k-west)   at ( \xoff-\r, \yoff  , \zoff) ;
@@ -74,9 +75,7 @@ scale/.store        in=\scale,
 caption/.store      in=\caption,
 name/.store         in=\name,
 fill/.store         in=\fill,
-logo/.store         in=\logo,
 opacity/.store      in=\opacity,
-logo=$\Sigma$,
 fill=green,
 opacity=0.10,
 scale=0.2,
