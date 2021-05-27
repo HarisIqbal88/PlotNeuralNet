@@ -1,16 +1,56 @@
 \ProvidesPackage{Ball}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%This Block can draw small Ball
-%Elementwise or reduction operations can be drawn with this
+%This Block can draw a 3-dim lattice of small Balls
+%Can be used to draw layers of explicit nodes, combined with
+%Box orto draw elementwise or reduction operations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \tikzset{Ball/.pic={\tikzset{/sphere/.cd,#1}	 	
 
 \pgfmathsetmacro{\r}{\radius*\scale}
+\pgfmathsetmacro{\y}{\cubey*\scale}
+\pgfmathsetmacro{\x}{\cubex*\scale}      
+\pgfmathsetmacro{\z}{\cubez*\scale}      
 
-\shade[ball color=\fill,opacity=\opacity] (0,0,0) circle (\r);
-\draw (0,0,0) circle [radius=\r] node[scale=4*\r] {\logo};
+\ifnum \nx=1
+\pgfmathsetmacro{\xdelta}{0}
+\else
+\pgfmathsetmacro{\xdelta}{(\x-2*\r)/(\nx-1)}
+\fi
 
+\ifnum \ny=1
+\pgfmathsetmacro{\ydiff}{0}
+\pgfmathsetmacro{\ydelta}{0}
+\else
+\pgfmathsetmacro{\ydiff}{(\y-2*\r)/2}\
+\pgfmathsetmacro{\ydelta}{(\y-2*\r)/(\ny-1)}
+\fi
+
+\ifnum \nz=1
+\pgfmathsetmacro{\zdiff}{0}
+\pgfmathsetmacro{\zdelta}{0}
+\else
+\pgfmathsetmacro{\zdiff}{(\z-2*\r)/2}\
+\pgfmathsetmacro{\zdelta}{(\z-2*\r)/(\nz-1)}
+\fi
+
+\foreach \i in {1, ..., \nx} {
+  \pgfmathsetmacro{\xoff}{(\i-1)*\xdelta+\r}
+  \foreach \j in {1, ..., \ny} {
+    \pgfmathsetmacro{\yoff}{(\j-1)*\ydelta-\ydiff}  
+    \foreach \k in {1, ..., \nz} {
+      \pgfmathsetmacro{\zoff}{(\k-1)*\zdelta-\zdiff}  
+      \shade[ball color=\fill, opacity=\opacity] (\xoff,\yoff,\zoff) circle (\r);
+      \draw (\xoff,\yoff,\zoff) circle [radius=\r] node[scale=4*\r] {\logo};
+      \coordinate (\name+\i+\j+\k-anchor) at ( \xoff , \yoff  , \zoff) ;
+      \coordinate (\name+\i+\j+\k-east)   at ( \xoff+\r, \yoff  , \zoff) ;
+      \coordinate (\name+\i+\j+\k-west)   at ( \xoff-\r, \yoff  , \zoff) ;
+      \coordinate (\name+\i+\j+\k-north)  at ( \xoff , \yoff+\r , \zoff) ;
+      \coordinate (\name+\i+\j+\k-south)  at ( \xoff , \yoff-\r, \zoff) ;  
+    }
+  }
+}
 \coordinate (\name-anchor) at ( 0 , 0  , 0) ;
 \coordinate (\name-east)   at ( \r, 0  , 0) ;
 \coordinate (\name-west)   at (-\r, 0  , 0) ;
@@ -23,7 +63,13 @@ edge ["\textcolor{black}{\bf \caption}"'] (caption-node); %Ball caption
 },
 /sphere/.search also={/tikz},
 /sphere/.cd,
+ny/.store           in=\ny,
+nx/.store           in=\nx,
+nz/.store           in=\nz,
 radius/.store       in=\radius,
+width/.store        in=\cubex,
+height/.store       in=\cubey,
+depth/.store        in=\cubez,
 scale/.store        in=\scale,
 caption/.store      in=\caption,
 name/.store         in=\name,
