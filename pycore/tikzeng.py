@@ -168,45 +168,59 @@ def to_SoftMax( name, s_filer=10, offset="(0,0,0)", to="(0,0,0)", width=1.5, hei
 
 def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
     return r"""
+\def\logo{{"+"}},
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Ball={
         name=""" + name +""",
-        caption="",
+        caption=,
         fill=\SumColor,
         opacity="""+ str(opacity) +""",
-        height="""+ str(radius) +""",
-        width="""+ str(radius) +""",
-        depth="""+ str(radius) +""" ,
+        height="""+ str(0*radius) +""",
+        width="""+ str(0*radius) +""",
+        depth="""+ str(0*radius) +""" ,
         nx="""+str(1)+""",
         ny="""+str(1)+""",
         nz="""+str(1)+""",
         radius="""+ str(radius) +""",
-%        logo=$+$
         }
     };
 """
 
-def to_FullConn( name, nx=2, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=2.5, width=10, height=10, depth=10, caption=" ", opacity=0.6, numLogoX=1, numLogoY=3, numLogoZ=1, logo=[1,2,3], pad="..." ):
+# Fully connected, 
+def to_Fc( name, nx=2, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=2.5, width=10, height=10, depth=10, caption=" ", opacity=0.6, numLogoX=-1, numLogoY=-1, numLogoZ=-1, logo=None, pad="...", withBalls=True, withBox=True, withConnections=True, color="\FcColor", cColor="black" ):
+    if numLogoX < 0:
+        numLogoX = nx
+    if numLogoY < 0:
+        numLogoY = ny
+    if numLogoZ < 0:
+        numLogoZ = nz
+    if logo == None:
+        logo = [ (z-1)*nx*ny + x*ny + y+1 for z in range(nz,0,-1) for x in range(nx) for y in range(ny) ]
     finalLogo = []
+    arrows = []
     n=0
-    for i in range(nx):
-        for j in range(ny):
-            for k in range(nz):
+    for k in range(nz):
+        for i in range(nx):
+            for j in range(ny):
                 if i < numLogoX and j < numLogoY and k >= nz-numLogoZ:
-                    print(k,nz-numLogoZ)
                     finalLogo.append(logo[n])
                     n+=1
                     if n>=len(logo):
                         n=0
                 else:
-                    finalLogo.append(pad)        
-    return r"""
+                    finalLogo.append(pad)
+
+
+                    
+    ret = r""
+    if withBalls:
+        ret += r"""
 \def\logo{{"""+",".join([ '"{}"'.format(x) for x in finalLogo ])+"""}},
 \pic[shift={"""+ offset +"""}] at """+ to +""" 
     {Ball={
         name=""" + name +""",
         caption="""+ caption +r""",
-        fill=\FcColor,
+        fill="""+color+""", 
         opacity="""+ str(opacity) +""",
         height="""+ str(height) +""",
         width="""+ str(width) +""",
@@ -218,12 +232,60 @@ def to_FullConn( name, nx=2, ny=2, nz=2, offset="(0,0,0)", to="(0,0,0)", radius=
        }
     };
 """
+    if withBox:
+        ret +=  r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel="""+ str(nx) +""",
+        ylabel="""+ str(ny) +""",
+        zlabel="""+ str(nz) +""",
+        fill="""+color+""",
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
+    if withConnections and withBalls: # need nodes to draw arrows
+        for i in range(2,numLogoX+1):
+            for jof in range(1,numLogoY+1):
+                for kof in range(nz,nz-numLogoZ,-1):
+                    for jto in range(1,numLogoY+1):
+                        for kto in range(nz,nz-numLogoZ,-1):
+                            arrows.append(
+                                "\draw [connection, draw={color}]  ({name}+{x1}+{y1}+{z1}-east)    "
+                                "-- node {{\midarrow}} ({name}+{x2}+{y2}+{z2}-west);".format(color=cColor,
+                                                                                             name=name,
+                                                                                             x1=i-1, y1=jof, z1=kof,
+                                                                                             x2=i, y2=jto, z2=kto))
+
+        ret += "\n".join(arrows)
+        
+    return ret
 
 
 def to_connection( of, to, color="black"):
     return r"""
 \draw [connection, draw="""+color+"""]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
 """
+
+def to_FullConnections( of, to, ofX=1, ofY=1, ofZ=1, toX=1, toY=1, toZ=1, color="black"):
+    arrows = []
+    for y1 in range(1,ofY+1):
+        for z1 in range(1,ofZ+1):
+            for y2 in range(1,toY+1):
+                for z2 in range(1,toZ+1):
+                    arrows.append(
+                        "\draw [connection, draw={color}]  ({of}+{x1}+{y1}+{z1}-east)    "
+                        "-- node {{\midarrow}} ({to}+{x2}+{y2}+{z2}-west);".format(color=color,
+                                                                                    of=of,
+                                                                                    to=to,
+                                                                                    x1=toX, y1=y1, z1=z1,
+                                                                                    x2=1, y2=y2, z2=z2)
+                    )
+    return "\n".join(arrows)
 
 def to_skip( of, to, pos=1.25):
     return r"""
