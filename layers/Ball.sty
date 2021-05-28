@@ -41,7 +41,7 @@
     \pgfmathsetmacro{\yoff}{(\j-1)*\ydelta-\ydiff}
     \foreach \k in {1, ..., \nz} {
       \pgfmathsetmacro{\zoff}{(\k-1)*\zdelta-\zdiff}  
-      \pgfmathsetmacro{\label}{\logo[(\i-1)*(\ny*\nz)+(\j-1)*(\nz)+(\k-1)]}
+      \pgfmathsetmacro{\label}{\logo[(\k-1)*(\nx*\ny)+(\i-1)*(\ny)+(\j-1)]}
       \shade[ball color=\fill, opacity=\opacity] (\xoff,\yoff,\zoff) circle (\r);
       \draw (\xoff,\yoff,\zoff) circle [radius=\r] node[scale=4*\r] {\label};
       \coordinate (\name+\i+\j+\k-anchor) at ( \xoff , \yoff  , \zoff) ;
