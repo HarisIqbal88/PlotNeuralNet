@@ -1,14 +1,17 @@
 #!/bin/bash
 
 
-python $1.py 
-pdflatex $1.tex
+var1=$1
+var2=${var1%%.*}
+
+python3 ${var2}.py 
+pdflatex ${var2}.tex
 
 rm *.aux *.log *.vscodeLog
 rm *.tex
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    open $1.pdf
+    open ${var2}.pdf
 else
-    xdg-open $1.pdf
+    xdg-open ${var2}.pdf
 fi
