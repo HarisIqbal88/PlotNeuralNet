@@ -38,7 +38,8 @@ arch = [
     
     to_ConvSoftMax( name="soft1", s_filer=512, offset="(0.75,0,0)", to="(end_b9-east)", width=1, height=40, depth=40, caption="SOFT" ),
     to_connection( "end_b9", "soft1"),
-     
+    
+    to_output( '../examples/fcn8s/cats.jpg', to="(soft1-east)"),
     to_end() 
     ]
 
