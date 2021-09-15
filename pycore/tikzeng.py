@@ -1,4 +1,3 @@
-
 import os
 
 def to_head( projectpath ):
@@ -184,6 +183,18 @@ def to_connection( of, to):
 \draw [connection]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
 """
 
+
+# Dotted Edges: Connect the dotted edges
+def to_dottedEdges(of, to):
+    return r"""
+\draw [densely dashed]
+("""+of+"""-nearnortheast) -- ("""+to+"""-nearnortheast)
+("""+of+"""-nearsoutheast) -- ("""+to+"""-nearsoutheast)
+("""+of+"""-farsoutheast) -- ("""+to+"""-farsoutheast)
+("""+of+"""-farnortheast) -- ("""+to+"""-farnortheast);
+"""
+
+
 def to_skip( of, to, pos=1.25):
     return r"""
 \path ("""+ of +"""-southeast) -- ("""+ of +"""-northeast) coordinate[pos="""+ str(pos) +"""] ("""+ of +"""-top) ;
@@ -193,6 +204,7 @@ def to_skip( of, to, pos=1.25):
 -- node {\copymidarrow}("""+to+"""-top)
 -- node {\copymidarrow} ("""+to+"""-north);
 """
+
 
 def to_end():
     return r"""
