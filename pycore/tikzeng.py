@@ -18,6 +18,7 @@ def to_cor():
 \def\PoolColor{rgb:red,1;black,0.3}
 \def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
 \def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\BatchNcolor{rgb:blue,19;green,69;red,139}
 \def\FcReluColor{rgb:blue,5;red,5;white,4}
 \def\SoftmaxColor{rgb:magenta,5;black,7}   
 \def\SumColor{rgb:blue,5;green,15}
@@ -57,6 +58,22 @@ def to_Conv( name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)", widt
     };
 """
 
+# FullCon
+def to_FulCon( name, s_filer=256, n_filer=64, offset="(0,0,0)", to="(0,0,0)", width=1, height=40, depth=40, caption=" "):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +""" 
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +r""",
+        xlabel={{"""+ str(n_filer) +""", }},
+        zlabel="""+ str(s_filer) +""",
+        fill=\FcColor,
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
 # Conv,Conv,relu
 # Bottleneck
 def to_ConvConvRelu( name, s_filer=256, n_filer=(64,64), offset="(0,0,0)", to="(0,0,0)", width=(2,2), height=40, depth=40, caption=" " ):
@@ -75,7 +92,21 @@ def to_ConvConvRelu( name, s_filer=256, n_filer=(64,64), offset="(0,0,0)", to="(
         }
     };
 """
-
+# BatchNorm
+def to_BN(name, offset="(0,0,0)", to="(0,0,0)", width=1, height=32, depth=32, opacity=0.5, caption=" "):
+    return r"""
+\pic[shift={ """+ offset +""" }] at """+ to +""" 
+    {Box={
+        name="""+name+""",
+        caption="""+ caption +r""",
+        fill=\BatchNcolor,
+        opacity="""+ str(opacity) +""",
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
 
 
 # Pool
