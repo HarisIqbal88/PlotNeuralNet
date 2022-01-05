@@ -10,6 +10,7 @@ def block_2ConvPool(
     offset="(1,0,0)",
     size=(32, 32, 3.5),
     opacity=0.5,
+    caption="",
 ):
     return [
         to_ConvConvRelu(
@@ -21,6 +22,7 @@ def block_2ConvPool(
             width=(size[2], size[2]),
             height=size[0],
             depth=size[1],
+            caption=caption,
         ),
         to_Pool(
             name="{}".format(top),
@@ -44,6 +46,7 @@ def block_Unconv(
     offset="(1,0,0)",
     size=(32, 32, 3.5),
     opacity=0.5,
+    caption="",
 ):
     return [
         to_UnPool(
@@ -75,6 +78,7 @@ def block_Unconv(
             width=size[2],
             height=size[0],
             depth=size[1],
+            caption=caption,
         ),
         to_ConvRes(
             name="ccr_res_c_{}".format(name),
@@ -111,10 +115,11 @@ def block_Res(
     offset="(0,0,0)",
     size=(32, 32, 3.5),
     opacity=0.5,
+    caption="",
 ):
     lys = []
     layers = [*["{}_{}".format(name, i) for i in range(num - 1)], top]
-    for name in layers:
+    for i, name in enumerate(layers):
         ly = [
             to_Conv(
                 name="{}".format(name),
@@ -125,6 +130,7 @@ def block_Res(
                 width=size[2],
                 height=size[0],
                 depth=size[1],
+                caption=caption if i == num // 2 else "",
             ),
             to_connection("{}".format(botton), "{}".format(name)),
         ]
