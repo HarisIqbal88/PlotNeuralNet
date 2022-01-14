@@ -35,7 +35,7 @@ class MLP(th.nn.Module):
 def main():
 
     mlp = MLP()
-    parser = TorchArchParser(torch_module=mlp, input_size=(1,2))
+    parser = TorchArchParser(torch_module=mlp, input_size=(1, 2))
     arch = parser.get_arch()
     to_generate(arch, pathname="./test_torch_mlp.tex")
 

@@ -101,7 +101,7 @@ Now, run the program as follows:
 ## PyTorch Support
 Define a feed forward `torch.nn.Sequential` module and let it parse with `pycore.torchparse.TorchArchParser`, then generate the tex file.
 
-Look into the example, provided in `pyexamples/test_torch_mlp.py` and run it via:
+Look into the example, provided with `pyexamples/test_torch_mlp.py` and run it via:
 
 ```bash
 cd pyexamples

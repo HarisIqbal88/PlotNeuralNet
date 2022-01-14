@@ -1,5 +1,3 @@
-import sys
-
 from torchinfo import summary
 
 import pycore.tikzeng as pnn
