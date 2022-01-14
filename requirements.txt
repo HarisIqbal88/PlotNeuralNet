@@ -1,0 +1,2 @@
+## The following requirements were added by pip freeze:
+torchinfo[pytorch]==1.6.2

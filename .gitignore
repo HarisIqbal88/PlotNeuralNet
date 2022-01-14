@@ -5,6 +5,8 @@
 __pycache__
 books
 project
+*.pyc
+pyexamples/*.pdf
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

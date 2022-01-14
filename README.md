@@ -98,4 +98,14 @@ Now, run the program as follows:
     bash ../tikzmake.sh my_arch
 
 
+## PyTorch Support
+Define a feed forward `torch.nn.Sequential` module and let it parse with `pycore.torchparse.TorchArchParser`, then generate the tex file.
 
+Look into the example, provided in `pyexamples/test_torch_mlp.py` and run it via:
+
+```bash
+cd pyexamples
+bash ../tikzmake.sh test_torch_mlp
+```
+
+Have a look into `examples/FeedForward/`.
