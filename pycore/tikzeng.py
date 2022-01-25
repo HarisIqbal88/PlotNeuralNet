@@ -184,6 +184,12 @@ def to_connection( of, to):
 \draw [connection]  ("""+of+"""-east)    -- node {\midarrow} ("""+to+"""-west);
 """
 
+def to_unet_branch_connection(of, to, name):
+    return r"""
+\path (""" + of + """-east) -- (""" + to + """-west|-""" + of + """-west) coordinate[pos=0.5] (""" + name + """);
+\draw[connection](""" + of + """-east)--node{\midarrow}(""" + name + """)--node{\midarrow}(""" + to + """-west-|""" + name + """)--node{\midarrow}("""+ to + """-west);
+"""
+
 def to_skip( of, to, pos=1.25):
     return r"""
 \path ("""+ of +"""-southeast) -- ("""+ of +"""-northeast) coordinate[pos="""+ str(pos) +"""] ("""+ of +"""-top) ;
