@@ -1,0 +1,15 @@
+[project]
+name = "PlotNeuralNet"
+dynamic = ["version"]
+dependencies = []
+authors = [
+    {name = "HarisIqbal88", email = "???@???.com"},
+]
+readme = "README.md"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = {attr = "pycore.version.__version__"}

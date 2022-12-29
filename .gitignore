@@ -1,3 +1,6 @@
+build
+*.egg-info
+
 *.aux
 *.log
 *.gz
