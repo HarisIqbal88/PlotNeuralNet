@@ -44,7 +44,7 @@ Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), p
     bash ../tikzmake.sh test_simple
     ```
     
-3. Optional: Installing the python interface as python module (this makes `import PlotNeuralNet` possible).
+3. Optional: Installing the python interface as python module (this makes `import PlotNeuralNetPy` possible).
     ```
     python -m pip install --use-feature=in-tree-build path/to/PlotNeuralNet
     ```
