@@ -1,5 +1,6 @@
 build
 *.egg-info
+*.pyc
 
 *.aux
 *.log

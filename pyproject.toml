@@ -1,5 +1,5 @@
 [project]
-name = "PlotNeuralNet"
+name = "PlotNeuralNetPy"
 dynamic = ["version"]
 dependencies = []
 authors = [
@@ -12,4 +12,4 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
-version = {attr = "pycore.version.__version__"}
+version = {attr = "PlotNeuralNetPy.version.__version__"}
