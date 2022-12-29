@@ -1,6 +1,7 @@
 build
 *.egg-info
 *.pyc
+dist
 
 *.aux
 *.log
