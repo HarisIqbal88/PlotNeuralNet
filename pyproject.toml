@@ -1,6 +1,6 @@
 [project]
 name = "PlotNeuralNetPy"
-dynamic = ["version"]
+version = "1.0.0"
 dependencies = []
 authors = [
     {name = "HarisIqbal88", email = "???@???.com"},
@@ -10,6 +10,3 @@ readme = "README.md"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools.dynamic]
-version = {attr = "PlotNeuralNetPy.version.__version__"}
