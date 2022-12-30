@@ -1,7 +1,8 @@
 
 import os
+from pathlib import Path
 
-def to_head( projectpath ):
+def to_head( projectpath=Path(__file__).parent.parent ):
     pathlayers = os.path.join( projectpath, 'layers/' ).replace('\\', '/')
     return r"""
 \documentclass[border=8pt, multi, tikz]{standalone} 

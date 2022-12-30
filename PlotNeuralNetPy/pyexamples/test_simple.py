@@ -1,11 +1,10 @@
 
 import sys
-sys.path.append('../')
 from ..pycore.tikzeng import *
 
 # defined your arch
 arch = [
-    to_head( '..' ),
+    to_head(),
     to_cor(),
     to_begin(),
     to_Conv("conv1", 512, 64, offset="(0,0,0)", to="(0,0,0)", height=64, depth=64, width=2 ),

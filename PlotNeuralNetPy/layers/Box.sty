@@ -1,0 +1,110 @@
+\ProvidesPackage{Box}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This Block can draw simple block of boxes with custom colors. 
+% Can be used for conv, deconv etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzset{Box/.pic={\tikzset{/boxblock/.cd,#1}
+        \tikzstyle{box}=[every edge/.append style={pic actions, densely dashed, opacity=.7},fill opacity=\opacity, pic actions,fill=\fill]
+        
+        \pgfmathsetmacro{\y}{\cubey*\scale}
+        \pgfmathsetmacro{\z}{\cubez*\scale}
+   
+        %Multiple concatenated boxes
+        \foreach[count=\i,%
+                 evaluate=\i as \xlabel using {array({\boxlabels},\i-1)},% 
+                 evaluate=\unscaledx as \k using {\unscaledx*\scale+\prev}, remember=\k as \prev (initially 0)] 
+                 \unscaledx in \cubex
+        {
+            \pgfmathsetmacro{\x}{\unscaledx*\scale}
+            \coordinate (a) at (\k-\x , \y/2 , \z/2); 
+            \coordinate (b) at (\k-\x ,-\y/2 , \z/2); 
+            \coordinate (c) at (\k    ,-\y/2 , \z/2); 
+            \coordinate (d) at (\k    , \y/2 , \z/2); 
+            \coordinate (e) at (\k    , \y/2 ,-\z/2); 
+            \coordinate (f) at (\k    ,-\y/2 ,-\z/2); 
+            \coordinate (g) at (\k-\x ,-\y/2 ,-\z/2); 
+            \coordinate (h) at (\k-\x , \y/2 ,-\z/2); 
+        
+            \draw [box] 
+                (d) -- (a) -- (b) -- (c) -- cycle     
+                (d) -- (a) -- (h) -- (e) -- cycle
+                %dotted edges
+                (f) edge (g)
+                (b) edge (g)
+                (h) edge (g)    
+            ;
+            \path (b) edge ["\xlabel"',midway] (c);
+            
+            \xdef\LastEastx{\k} %\k persists as \LastEastx after loop 
+        }%Loop ends
+        \draw [box] (d) -- (e) -- (f) -- (c) -- cycle; %East face of last box     
+        
+        \coordinate (a1) at (0 , \y/2 , \z/2);
+        \coordinate (b1) at (0 ,-\y/2 , \z/2);
+        \tikzstyle{depthlabel}=[pos=0,text width=14*\z,text centered,sloped]       
+        
+        \path (c) edge ["\small\zlabel"',depthlabel](f); %depth label
+        \path (b1) edge ["\ylabel",midway] (a1);  %height label
+        
+        
+        \tikzstyle{captionlabel}=[text width=15*\LastEastx/\scale,text centered]       
+        \path (\LastEastx/2,-\y/2,+\z/2) + (0,-25pt) coordinate (cap) 
+        edge ["\textcolor{black}{ \bf \caption}"',captionlabel](cap) ; %Block caption/pic object label
+         
+        %Define nodes to be used outside on the pic object
+        \coordinate (\name-west)   at (0,0,0) ;
+        \coordinate (\name-east)   at (\LastEastx, 0,0) ;
+        \coordinate (\name-north)  at (\LastEastx/2,\y/2,0);
+        \coordinate (\name-south)  at (\LastEastx/2,-\y/2,0);       
+        \coordinate (\name-anchor) at (\LastEastx/2, 0,0) ;
+        
+        \coordinate (\name-near) at (\LastEastx/2,0,\z/2);
+        \coordinate (\name-far)  at (\LastEastx/2,0,-\z/2);       
+        
+        \coordinate (\name-nearwest) at (0,0,\z/2);
+        \coordinate (\name-neareast) at (\LastEastx,0,\z/2);
+        \coordinate (\name-farwest)  at (0,0,-\z/2);
+        \coordinate (\name-fareast)  at (\LastEastx,0,-\z/2);
+        
+        \coordinate (\name-northeast) at (\name-north-|\name-east);
+        \coordinate (\name-northwest) at (\name-north-|\name-west);
+        \coordinate (\name-southeast) at (\name-south-|\name-east);
+        \coordinate (\name-southwest) at (\name-south-|\name-west);
+        
+        \coordinate (\name-nearnortheast)  at (\LastEastx, \y/2, \z/2);
+        \coordinate (\name-farnortheast)   at (\LastEastx, \y/2,-\z/2);
+        \coordinate (\name-nearsoutheast)  at (\LastEastx,-\y/2, \z/2);
+        \coordinate (\name-farsoutheast)   at (\LastEastx,-\y/2,-\z/2);
+        
+        \coordinate (\name-nearnorthwest)  at (0, \y/2, \z/2);
+        \coordinate (\name-farnorthwest)   at (0, \y/2,-\z/2);
+        \coordinate (\name-nearsouthwest)  at (0,-\y/2, \z/2);
+        \coordinate (\name-farsouthwest)   at (0,-\y/2,-\z/2);
+        
+    },
+    /boxblock/.search also={/tikz},
+    /boxblock/.cd,
+    width/.store        in=\cubex,
+    height/.store       in=\cubey,
+    depth/.store        in=\cubez,
+    scale/.store        in=\scale,
+    xlabel/.store       in=\boxlabels,
+    ylabel/.store       in=\ylabel,
+    zlabel/.store       in=\zlabel,
+    caption/.store      in=\caption,
+    name/.store         in=\name,
+    fill/.store         in=\fill,
+    opacity/.store      in=\opacity,
+    fill={rgb:red,5;green,5;blue,5;white,15},
+    opacity=0.4,
+    width=2,
+    height=13,
+    depth=15,
+    scale=.2,
+    xlabel={{"","","","","","","","","",""}},
+    ylabel=,
+    zlabel=,
+    caption=,
+    name=,
+}
