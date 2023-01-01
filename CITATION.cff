@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "HarisIqbal88"
+  given-names: ""
+  orcid: ""
+title: "PlotNeuralNet"
+version: 1.0.0
+doi: "10.5281/zenodo.2526396"
+date-released: 2018-12-25
+url: "https://github.com/HarisIqbal88/PlotNeuralNet/tree/v1.0.0"

@@ -1,11 +1,10 @@
 
 import sys
-sys.path.append('../')
-from pycore.tikzeng import *
-from pycore.blocks  import *
+from ..pycore.tikzeng import *
+from ..pycore.blocks  import *
 
 arch = [ 
-    to_head('..'), 
+    to_head(), 
     to_cor(),
     to_begin(),
     
