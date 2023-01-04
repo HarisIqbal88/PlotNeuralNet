@@ -9,6 +9,8 @@ rm *.tex
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     open $1.pdf
-else
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     xdg-open $1.pdf
+else
+    start $1.pdf
 fi
