@@ -83,3 +83,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Docker log
+docker_build.log
