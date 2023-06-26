@@ -26,10 +26,11 @@ Following are some network representations:
 ```sh
 sudo apt-get install texlive-latex-extra
 
+
 ```
 
 * Ubuntu 18.04.2
-Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), please install the following packages.
+   Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), please install the following packages.
 
 ```sh
 sudo apt-get install texlive-latex-base
@@ -37,35 +38,39 @@ sudo apt-get install texlive-fonts-recommended
 sudo apt-get install texlive-fonts-extra
 sudo apt-get install texlive-latex-extra
 
+
 ```
 
 * Windows
 
 1. Download and install [MikTeX](https://miktex.org/download).
 2. Download and install bash runner on Windows, recommends [Git bash](https://git-scm.com/download/win) or Cygwin(https://www.cygwin.com/)
-
-2. Execute the example as followed.
+3. Execute the example as followed.
 
 ```sh
 cd pyexamples/
 bash ../tikzmake.sh test_simple
+
 ```
 
 * Docker
 
 1. Install [Docker](https://www.docker.com/). If using Windows, you can install Docker Desktop for Windows, or use WSL to install Docker CE for Ubuntu.
-    - The MikTex docker image is used as the base stage for the docker build, which is based on Ubuntu 20.04 LTS
+
+   - The MikTex docker image is used as the base stage for the docker build, which is based on Ubuntu 20.04 LTS
 
 2. Run the `docker_build.sh` file using the following command to build the docker image (from the root directory of this repo). You need bash to run this script. If using Windows, you can install Git bash or Cygwin; WSL and Linux have bash built-in.
 
 ```sh
 bash build_pnn_docker.sh
+
 ```
 
 3. Run the container in docker (from a WSL or Linux terminal) with the following command (from the root directory of this repo). Ensure the command is being run as admin of the machine.
 
 ```sh
 bash start_pnn_docker.sh
+
 ```
 
 ## TODO
@@ -116,11 +121,21 @@ def main():
 if __name__ == '__main__':
     main()
 
+
 ```
 
 Now, run the program as follows:
 
     bash ../tikzmake.sh my_arch
+
+## Poetry Dependency Management
+
+To use in other projects that use Poetry for dependency management, add the following to your `pyproject.toml` file:
+
+```toml
+[tool.poetry.dev-dependencies]
+plotneuralnet           = { git = "https://github.com/HarisIqbal88/PlotNeuralNet.git" }
+```
 
 
 

@@ -9,7 +9,7 @@ packages = [{include = "plotneuralnet"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
-
+poetry = "^1.4.1"
 
 [build-system]
 requires = ["poetry-core"]
