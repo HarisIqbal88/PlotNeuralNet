@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "plotneuralnet"
+license = "MIT License"
+version = "0.1.0"
+description = "PlotNeuralNet creates model architectures in easy-to-digest diagrams created via LaTeX engine"
+authors = ["Your Name <cmendres400@gmail.com>"]
+readme = "README.md"
+packages = [{include = "plotneuralnet"}]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
