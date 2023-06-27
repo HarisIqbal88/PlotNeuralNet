@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "plotneuralnet-poetry"
+name = "plotneuralnet"
 license = "MIT License"
 version = "0.1.0"
 description = "PlotNeuralNet creates model architectures in easy-to-digest diagrams created via LaTeX engine"
