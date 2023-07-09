@@ -4,7 +4,18 @@ import pycore.tikzeng as pnn
 
 
 class TorchArchParser:
-    text_mapping = {"Linear": "\\mathrm{{FC}}", "ReLU": "\\varphi_\\mathrm{{ReLU}}"}
+    """Parse a torch module to a tikz architecture diagram.
+
+    Currently supported torch modules:
+        - Linear
+        - ReLU
+
+    """
+
+    text_mapping = {
+        "Linear": r"\\mathrm{{FC}}",
+        "ReLU": r"\\varphi_\\mathrm{{ReLU}}"
+    }
 
     def __init__(self, torch_module, input_size):
         self.torch_module = torch_module
