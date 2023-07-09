@@ -1,0 +1,94 @@
+
+\documentclass[border=8pt, multi, tikz]{standalone}
+\usepackage{import}
+\subimport{../layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d} %for including external image
+
+\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
+\def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\SoftmaxColor{rgb:magenta,5;black,7}
+\def\SumColor{rgb:blue,5;green,15}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+
+\pic[shift={(1, 0, 0)}] at (0, 0, 0)
+    {Box={
+        name=module1,
+        caption=$\mathrm{{FC}}$,
+        xlabel={{16, }},
+        zlabel=,
+        fill=\FcColor,
+        height=16,
+        width=1,
+        depth=1
+        }
+    };
+
+\pic[shift={(0.5, 0, 0)}] at (module1-east)
+    {Box={
+        name=module2,
+        caption=$\varphi_\mathrm{{ReLU}}$,
+        xlabel={{, }},
+        zlabel=,
+        fill=\ConvColor,
+        height=16,
+        width=0.5,
+        depth=1
+        }
+    };
+
+\pic[shift={(1, 0, 0)}] at (module2-east)
+    {Box={
+        name=module3,
+        caption=$\mathrm{{FC}}$,
+        xlabel={{16, }},
+        zlabel=,
+        fill=\FcColor,
+        height=16,
+        width=1,
+        depth=1
+        }
+    };
+
+\draw [connection]  (module2-east)    -- node {\midarrow} (module3-west);
+
+\pic[shift={(0.5, 0, 0)}] at (module3-east)
+    {Box={
+        name=module4,
+        caption=$\varphi_\mathrm{{ReLU}}$,
+        xlabel={{, }},
+        zlabel=,
+        fill=\ConvColor,
+        height=16,
+        width=0.5,
+        depth=1
+        }
+    };
+
+\pic[shift={(1, 0, 0)}] at (module4-east)
+    {Box={
+        name=module5,
+        caption=$\mathrm{{FC}}$,
+        xlabel={{1, }},
+        zlabel=,
+        fill=\FcColor,
+        height=1,
+        width=1,
+        depth=1
+        }
+    };
+
+\draw [connection]  (module4-east)    -- node {\midarrow} (module5-west);
+
+\end{tikzpicture}
+\end{document}

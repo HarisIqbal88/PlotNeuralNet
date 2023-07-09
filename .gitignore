@@ -1,10 +1,30 @@
+# Project
+*tex
+!examples/**/*tex
+*pdf
+!examples/**/*tex
+
+# LaTeX
 *.aux
 *.log
 *.gz
+*.fdb_latexmk
+*.fls
+*.synctex(busy)
 
-__pycache__
-books
-project
+# Python
+__pycache__/
+*.egg-info/
+
+*.pyc
+
+# Python tools
+.ruff_cache/
+.pytest_cache/
+
+# IDEs
+.idea/
+.vscode/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

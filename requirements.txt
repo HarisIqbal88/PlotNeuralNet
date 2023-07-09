@@ -1,0 +1,3 @@
+## The following requirements were added by pip freeze:
+torch=2.0.0
+torchinfo==1.8.0
