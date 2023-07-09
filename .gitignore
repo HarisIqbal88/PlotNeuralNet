@@ -1,14 +1,16 @@
+# Project
+pyexamples/*.pdf
+
 # LaTeX
 *.aux
 *.log
 *.gz
 
 # Python
-__pycache__
-books
-project
+__pycache__/
+*.egg-info/
+
 *.pyc
-pyexamples/*.pdf
 
 # Python tools
 .ruff_cache/
