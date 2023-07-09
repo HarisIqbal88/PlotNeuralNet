@@ -7,8 +7,6 @@ import torch as th
 from pycore.tikzeng import to_generate
 from pycore.torchparse import TorchArchParser
 
-DEVICE = th.device("cuda" if th.cuda.is_available() else "cpu")
-
 
 class MLP(th.nn.Module):
     def __init__(self):
