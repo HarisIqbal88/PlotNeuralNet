@@ -1,3 +1,4 @@
+from torch import th
 from torchinfo import summary
 
 import pycore.tikzeng as pnn
@@ -17,8 +18,12 @@ class TorchArchParser:
         "ReLU": r"\\varphi_\\mathrm{{ReLU}}"
     }
 
-    def __init__(self, torch_module, input_size):
+    def __init__(self, torch_module: th.nn.Module, input_size):
+
+        assert isinstance(torch_module, th.nn.Module), "torch_module must not be an instance of torch.nn.Module."
+
         self.torch_module = torch_module
+
         self.summary_list = summary(self.torch_module, input_size=input_size).summary_list
 
         self.arch = self.parse(self.summary_list)
