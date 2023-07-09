@@ -20,7 +20,7 @@ class TorchArchParser:
 
     def __init__(self, torch_module: th.nn.Module, input_size):
 
-        assert isinstance(torch_module, th.nn.Module), "torch_module must not be an instance of torch.nn.Module."
+        assert isinstance(torch_module, th.nn.Module), "torch_module is not an instance of torch.nn.Module."
 
         self.torch_module = torch_module
 
