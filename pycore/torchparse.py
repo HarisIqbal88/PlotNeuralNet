@@ -58,7 +58,7 @@ class TorchArchParser:
                     arch_layer = pnn.to_connection(f"module{idx-1}", f"module{idx}")
                     arch.append(arch_layer)
 
-            if layer.class_name in {"ReLU"}:
+            elif layer.class_name in {"ReLU"}:
                 text = TorchArchParser.text_mapping.get(layer.class_name, "\\varphi")
                 arch_layer = pnn.to_Conv(
                     name=f"module{idx}",
@@ -72,6 +72,9 @@ class TorchArchParser:
                     to=f"(module{idx-1}-east)" if idx > 1 else str((0, 0, 0)),
                 )
                 arch.append(arch_layer)
+
+            else:
+                raise NotImplementedError(f"Layer {layer.class_name} is not supported, yet.")
 
         arch.append(pnn.to_end())
 
