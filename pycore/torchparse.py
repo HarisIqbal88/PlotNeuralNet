@@ -4,32 +4,24 @@ import pycore.tikzeng as pnn
 
 
 class TorchArchParser:
-
-    text_mapping = {
-        "Linear": "\\mathrm{{FC}}",
-        "ReLU": "\\varphi_\\mathrm{{ReLU}}"
-    }
+    text_mapping = {"Linear": "\\mathrm{{FC}}", "ReLU": "\\varphi_\\mathrm{{ReLU}}"}
 
     def __init__(self, torch_module, input_size):
-
         self.torch_module = torch_module
         self.summary_list = summary(self.torch_module, input_size=input_size).summary_list
 
         self.arch = self.parse(self.summary_list)
 
     def get_arch(self):
-
         return self.arch
 
     @staticmethod
     def parse(summary_list):
-
         arch = list()
         arch.append(pnn.to_head(".."))
         arch.append(pnn.to_cor())
         arch.append(pnn.to_begin())
         for idx, layer in enumerate(summary_list[2:], start=1):
-
             if layer.class_name == "Linear":
                 text = TorchArchParser.text_mapping.get(layer.class_name, "\\mathrm{{FC}}")
                 arch_layer = pnn.to_Conv(
