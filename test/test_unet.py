@@ -1,16 +1,19 @@
 import sys
+from pathlib import Path
 
-sys.path.append("../")
+sys.path.append(Path(__file__).parent.parent.resolve().as_posix())
+
+from pycore import PROJECT_PATH
 from pycore.blocks import *
 from pycore.tikzeng import *
 
 
 arch = [
-    to_head(".."),
+    to_head(PROJECT_PATH),
     to_cor(),
     to_begin(),
     # input
-    to_input("../examples/fcn8s/cats.jpg"),
+    to_input(PROJECT_PATH + "/../examples/fcn8s/cats.jpg"),
     # block-001
     to_ConvConvRelu(
         name="ccr_b1", s_filer=500, n_filer=(64, 64), offset="(0,0,0)", to="(0,0,0)", width=(2, 2), height=40, depth=40
@@ -113,10 +116,9 @@ arch = [
 ]
 
 
-def main():
-    namefile = str(sys.argv[0]).split(".")[0]
-    to_generate(arch, namefile + ".tex")
+def test_unet():
+    to_generate(arch, f"./{__name__}.tex")
 
 
 if __name__ == "__main__":
-    main()
+    test_unet()

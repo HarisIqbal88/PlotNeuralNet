@@ -1,6 +1,7 @@
 import sys
+from pathlib import Path
 
-sys.path.append("../")
+sys.path.append(Path(__file__).parent.parent.resolve().as_posix())
 
 import torch as th
 
@@ -23,12 +24,12 @@ class MLP(th.nn.Module):
         return y_hat.view(-1, 1)
 
 
-def main():
+def test_torch_mlp():
     mlp = MLP()
     parser = TorchArchParser(torch_module=mlp, input_size=(1, 2))
     arch = parser.get_arch()
-    to_generate(arch, pathname="./test_torch_mlp.tex")
+    to_generate(arch, pathname=f"./{__name__}.tex")
 
 
 if __name__ == "__main__":
-    main()
+    test_torch_mlp()

@@ -1,7 +1,7 @@
-from torch import th
+import torch as th
 from torchinfo import summary
 
-import pycore.tikzeng as pnn
+from . import PROJECT_PATH, tikzeng
 
 
 class TorchArchParser:
@@ -13,8 +13,8 @@ class TorchArchParser:
     """
 
     text_mapping = {
-        "Linear": r"\\mathrm{{FC}}",
-        "ReLU": r"\\varphi_\\mathrm{{ReLU}}"
+        "Linear": r"\mathrm{{FC}}",
+        "ReLU": r"\varphi_\mathrm{{ReLU}}"
     }
 
     def __init__(self, torch_module: th.nn.Module, input_size):
@@ -33,13 +33,13 @@ class TorchArchParser:
     @staticmethod
     def parse(summary_list):
         arch = list()
-        arch.append(pnn.to_head(".."))
-        arch.append(pnn.to_cor())
-        arch.append(pnn.to_begin())
+        arch.append(tikzeng.to_head(PROJECT_PATH))
+        arch.append(tikzeng.to_cor())
+        arch.append(tikzeng.to_begin())
         for idx, layer in enumerate(summary_list[2:], start=1):
             if layer.class_name == "Linear":
                 text = TorchArchParser.text_mapping.get(layer.class_name, "\\mathrm{{FC}}")
-                arch_layer = pnn.to_Conv(
+                arch_layer = tikzeng.to_Conv(
                     name=f"module{idx}",
                     s_filer="",
                     n_filer=layer.module.out_features,
@@ -54,12 +54,12 @@ class TorchArchParser:
                 arch.append(arch_layer)
 
                 if idx > 1:
-                    arch_layer = pnn.to_connection(f"module{idx-1}", f"module{idx}")
+                    arch_layer = tikzeng.to_connection(f"module{idx-1}", f"module{idx}")
                     arch.append(arch_layer)
 
             elif layer.class_name in {"ReLU"}:
                 text = TorchArchParser.text_mapping.get(layer.class_name, "\\varphi")
-                arch_layer = pnn.to_Conv(
+                arch_layer = tikzeng.to_Conv(
                     name=f"module{idx}",
                     s_filer="",
                     n_filer="",
@@ -75,6 +75,6 @@ class TorchArchParser:
             else:
                 raise NotImplementedError(f"Layer {layer.class_name} is not supported, yet.")
 
-        arch.append(pnn.to_end())
+        arch.append(tikzeng.to_end())
 
         return arch

@@ -1,10 +1,16 @@
 # Project
+./*.pdf
+./*.tex
 test/*.pdf
+test/*.tex
 
 # LaTeX
 *.aux
 *.log
 *.gz
+*.fdb_latexmk
+*.fls
+*.synctex(busy)
 
 # Python
 __pycache__/
@@ -14,6 +20,7 @@ __pycache__/
 
 # Python tools
 .ruff_cache/
+.pytest_cache/
 
 # IDEs
 .idea/

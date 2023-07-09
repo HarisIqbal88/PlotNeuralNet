@@ -1,8 +1,11 @@
 import os
+from pathlib import Path
+
+from . import PROJECT_PATH
 
 
-def to_head(projectpath):
-    pathlayers = os.path.join(projectpath, "layers/").replace("\\", "/")
+def to_head(projectpath=PROJECT_PATH):
+    pathlayers = os.path.relpath((Path(projectpath).parent / "layers/").resolve().as_posix(), ".").replace("\\\\", "/").replace("\\", "/")
     return (
         r"""
 \documentclass[border=8pt, multi, tikz]{standalone}
@@ -44,21 +47,22 @@ def to_begin():
 
 
 def to_input(pathfile, to="(-3,0,0)", width=8, height=8, name="temp"):
+    pathfile = os.path.relpath(pathfile, ".").replace("\\\\", "/").replace("\\", "/")
     return (
         r"""
 \node[canvas is zy plane at x=0] ("""
         + name
-        + """) at """
+        + r""") at """
         + to
-        + """ {\includegraphics[width="""
+        + r""" {\includegraphics[width="""
         + str(width)
         + "cm"
-        + """,height="""
+        + r""",height="""
         + str(height)
         + "cm"
-        + """]{"""
+        + r"""]{"""
         + pathfile
-        + """}};
+        + r"""}};
 """
     )
 
@@ -73,41 +77,41 @@ def to_Conv(
     width=1,
     height=40,
     depth=40,
-    fill_color="\ConvColor",
+    fill_color=r"\ConvColor",
     caption=" ",
 ):
     return (
         r"""
 \pic[shift={"""
         + offset
-        + """}] at """
+        + r"""}] at """
         + to
-        + """
+        + r"""
     {Box={
         name="""
         + name
-        + """,
+        + r""",
         caption="""
         + caption
         + r""",
         xlabel={{"""
         + str(n_filer)
-        + """, }},
+        + r""", }},
         zlabel="""
         + str(s_filer)
-        + """,
+        + r""",
         fill="""
         + str(fill_color)
-        + """,
+        + r""",
         height="""
         + str(height)
-        + """,
+        + r""",
         width="""
         + str(width)
-        + """,
+        + r""",
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -123,37 +127,37 @@ def to_ConvConvRelu(
         r"""
 \pic[shift={ """
         + offset
-        + """ }] at """
+        + r""" }] at """
         + to
-        + """
+        + r"""
     {RightBandedBox={
         name="""
         + name
-        + """,
+        + r""",
         caption="""
         + caption
-        + """,
+        + r""",
         xlabel={{ """
         + str(n_filer[0])
-        + """, """
+        + r""", """
         + str(n_filer[1])
-        + """ }},
+        + r""" }},
         zlabel="""
         + str(s_filer)
-        + """,
+        + r""",
         fill=\ConvColor,
         bandfill=\ConvReluColor,
         height="""
         + str(height)
-        + """,
+        + r""",
         width={ """
         + str(width[0])
-        + """ , """
+        + r""" , """
         + str(width[1])
-        + """ },
+        + r""" },
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -166,29 +170,29 @@ def to_Pool(name, offset="(0,0,0)", to="(0,0,0)", width=1, height=32, depth=32, 
         r"""
 \pic[shift={ """
         + offset
-        + """ }] at """
+        + r""" }] at """
         + to
-        + """
+        + r"""
     {Box={
         name="""
         + name
-        + """,
+        + r""",
         caption="""
         + caption
         + r""",
         fill=\PoolColor,
         opacity="""
         + str(opacity)
-        + """,
+        + r""",
         height="""
         + str(height)
-        + """,
+        + r""",
         width="""
         + str(width)
-        + """,
+        + r""",
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -201,9 +205,9 @@ def to_UnPool(name, offset="(0,0,0)", to="(0,0,0)", width=1, height=32, depth=32
         r"""
 \pic[shift={ """
         + offset
-        + """ }] at """
+        + r""" }] at """
         + to
-        + """
+        + r"""
     {Box={
         name="""
         + name
@@ -214,16 +218,16 @@ def to_UnPool(name, offset="(0,0,0)", to="(0,0,0)", width=1, height=32, depth=32
         fill=\UnpoolColor,
         opacity="""
         + str(opacity)
-        + """,
+        + r""",
         height="""
         + str(height)
-        + """,
+        + r""",
         width="""
         + str(width)
-        + """,
+        + r""",
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -246,19 +250,19 @@ def to_ConvRes(
         r"""
 \pic[shift={ """
         + offset
-        + """ }] at """
+        + r""" }] at """
         + to
-        + """
+        + r"""
     {RightBandedBox={
         name="""
         + name
-        + """,
+        + r""",
         caption="""
         + caption
-        + """,
+        + r""",
         xlabel={{ """
         + str(n_filer)
-        + """, }},
+        + r""", }},
         zlabel="""
         + str(s_filer)
         + r""",
@@ -266,16 +270,16 @@ def to_ConvRes(
         bandfill={rgb:white,1;black,2},
         opacity="""
         + str(opacity)
-        + """,
+        + r""",
         height="""
         + str(height)
-        + """,
+        + r""",
         width="""
         + str(width)
-        + """,
+        + r""",
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -288,29 +292,29 @@ def to_ConvSoftMax(name, s_filer=40, offset="(0,0,0)", to="(0,0,0)", width=1, he
         r"""
 \pic[shift={"""
         + offset
-        + """}] at """
+        + r"""}] at """
         + to
-        + """
+        + r"""
     {Box={
         name="""
         + name
-        + """,
+        + r""",
         caption="""
         + caption
-        + """,
+        + r""",
         zlabel="""
         + str(s_filer)
-        + """,
+        + r""",
         fill=\SoftmaxColor,
         height="""
         + str(height)
-        + """,
+        + r""",
         width="""
         + str(width)
-        + """,
+        + r""",
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -325,33 +329,33 @@ def to_SoftMax(
         r"""
 \pic[shift={"""
         + offset
-        + """}] at """
+        + r"""}] at """
         + to
-        + """
+        + r"""
     {Box={
         name="""
         + name
-        + """,
+        + r""",
         caption="""
         + caption
-        + """,
+        + r""",
         xlabel={{" ","dummy"}},
         zlabel="""
         + str(s_filer)
-        + """,
+        + r""",
         fill=\SoftmaxColor,
         opacity="""
         + str(opacity)
-        + """,
+        + r""",
         height="""
         + str(height)
-        + """,
+        + r""",
         width="""
         + str(width)
-        + """,
+        + r""",
         depth="""
         + str(depth)
-        + """
+        + r"""
         }
     };
 """
@@ -363,20 +367,20 @@ def to_Sum(name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
         r"""
 \pic[shift={"""
         + offset
-        + """}] at """
+        + r"""}] at """
         + to
-        + """
+        + r"""
     {Ball={
         name="""
         + name
-        + """,
+        + r""",
         fill=\SumColor,
         opacity="""
         + str(opacity)
-        + """,
+        + r""",
         radius="""
         + str(radius)
-        + """,
+        + r""",
         logo=$+$
         }
     };
@@ -389,9 +393,9 @@ def to_connection(of, to):
         r"""
 \draw [connection]  ("""
         + of
-        + """-east)    -- node {\midarrow} ("""
+        + r"""-east)    -- node {\midarrow} ("""
         + to
-        + """-west);
+        + r"""-west);
 """
     )
 
@@ -401,34 +405,34 @@ def to_skip(of, to, pos=1.25):
         r"""
 \path ("""
         + of
-        + """-southeast) -- ("""
+        + r"""-southeast) -- ("""
         + of
-        + """-northeast) coordinate[pos="""
+        + r"""-northeast) coordinate[pos="""
         + str(pos)
-        + """] ("""
+        + r"""] ("""
         + of
-        + """-top) ;
+        + r"""-top) ;
 \path ("""
         + to
-        + """-south)  -- ("""
+        + r"""-south)  -- ("""
         + to
-        + """-north)  coordinate[pos="""
+        + r"""-north)  coordinate[pos="""
         + str(pos)
-        + """] ("""
+        + r"""] ("""
         + to
-        + """-top) ;
+        + r"""-top) ;
 \draw [copyconnection]  ("""
         + of
-        + """-northeast)
+        + r"""-northeast)
 -- node {\copymidarrow}("""
         + of
-        + """-top)
+        + r"""-top)
 -- node {\copymidarrow}("""
         + to
-        + """-top)
+        + r"""-top)
 -- node {\copymidarrow} ("""
         + to
-        + """-north);
+        + r"""-north);
 """
     )
 

@@ -1,12 +1,15 @@
 import sys
+from pathlib import Path
 
-sys.path.append("../")
+sys.path.append(Path(__file__).parent.parent.resolve().as_posix())
+
+from pycore import PROJECT_PATH
 from pycore.tikzeng import *
 
 
 # defined your arch
 arch = [
-    to_head(".."),
+    to_head(PROJECT_PATH),
     to_cor(),
     to_begin(),
     to_Conv("conv1", 512, 64, offset="(0,0,0)", to="(0,0,0)", height=64, depth=64, width=2),
@@ -22,10 +25,9 @@ arch = [
 ]
 
 
-def main():
-    namefile = str(sys.argv[0]).split(".")[0]
-    to_generate(arch, namefile + ".tex")
+def test_simple():
+    to_generate(arch, f"./{__name__}.tex")
 
 
 if __name__ == "__main__":
-    main()
+    test_simple()
