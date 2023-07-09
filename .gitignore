@@ -1,12 +1,21 @@
+# LaTeX
 *.aux
 *.log
 *.gz
 
+# Python
 __pycache__
 books
 project
 *.pyc
 pyexamples/*.pdf
+
+# Python tools
+.ruff_cache/
+
+# IDEs
+.idea/
+.vscode/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
