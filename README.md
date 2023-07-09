@@ -40,7 +40,7 @@ Base on this [website](https://gist.github.com/rain1024/98dd5e2c6c8c28f9ea9d), p
 
 2. Execute the example as followed.
     ```
-    cd pyexamples/
+    cd test/
     bash ../tikzmake.sh test_simple
     ```
 
@@ -101,10 +101,10 @@ Now, run the program as follows:
 ## PyTorch Support
 Define a feed forward `torch.nn.Sequential` module and let it parse with `pycore.torchparse.TorchArchParser`, then generate the tex file.
 
-Look into the example, provided with `pyexamples/test_torch_mlp.py` and run it via:
+Look into the example, provided with `test/test_torch_mlp.py` and run it via:
 
 ```bash
-cd pyexamples
+cd test
 bash ../tikzmake.sh test_torch_mlp
 ```
 
