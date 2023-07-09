@@ -12,13 +12,9 @@ class TorchArchParser:
         - Activations: ReLU
     """
 
-    text_mapping = {
-        "Linear": r"\mathrm{{FC}}",
-        "ReLU": r"\varphi_\mathrm{{ReLU}}"
-    }
+    text_mapping = {"Linear": r"\mathrm{{FC}}", "ReLU": r"\varphi_\mathrm{{ReLU}}"}
 
     def __init__(self, torch_module: th.nn.Module, input_size):
-
         assert isinstance(torch_module, th.nn.Module), "torch_module is not an instance of torch.nn.Module."
 
         self.torch_module = torch_module

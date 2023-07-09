@@ -5,7 +5,11 @@ from . import PROJECT_PATH
 
 
 def to_head(projectpath=PROJECT_PATH):
-    pathlayers = os.path.relpath((Path(projectpath).parent / "layers/").resolve().as_posix(), ".").replace("\\\\", "/").replace("\\", "/")
+    pathlayers = (
+        os.path.relpath((Path(projectpath).parent / "layers/").resolve().as_posix(), ".")
+        .replace("\\\\", "/")
+        .replace("\\", "/")
+    )
     return (
         r"""
 \documentclass[border=8pt, multi, tikz]{standalone}

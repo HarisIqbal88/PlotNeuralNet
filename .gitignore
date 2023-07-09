@@ -1,8 +1,8 @@
 # Project
-./*.pdf
-./*.tex
-test/*.pdf
-test/*.tex
+*tex
+!examples/**/*tex
+*pdf
+!examples/**/*tex
 
 # LaTeX
 *.aux

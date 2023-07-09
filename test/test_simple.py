@@ -6,7 +6,6 @@ sys.path.append(Path(__file__).parent.parent.resolve().as_posix())
 from pycore import PROJECT_PATH
 from pycore.tikzeng import *
 
-
 # defined your arch
 arch = [
     to_head(PROJECT_PATH),

@@ -7,7 +7,6 @@ from pycore import PROJECT_PATH
 from pycore.blocks import *
 from pycore.tikzeng import *
 
-
 arch = [
     to_head(PROJECT_PATH),
     to_cor(),
