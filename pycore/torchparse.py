@@ -8,9 +8,8 @@ class TorchArchParser:
     """Parse a torch module to a tikz architecture diagram.
 
     Currently supported torch modules:
-        - Linear
-        - ReLU
-
+        - Layers: Linear
+        - Activations: ReLU
     """
 
     text_mapping = {
