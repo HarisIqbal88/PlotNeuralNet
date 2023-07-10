@@ -178,6 +178,36 @@ def to_Sum( name, offset="(0,0,0)", to="(0,0,0)", radius=2.5, opacity=0.6):
     };
 """
 
+def to_Ball( name, offset="(0,0,0)", to="(0,0,0)", radius=1, opacity=0.6, color="green", text="", caption=""):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +"""
+    {Ball={
+        name=""" + name +""",
+        caption="""+ caption +""",
+        fill="""+ color +""",
+        opacity="""+ str(opacity) +""",
+        radius="""+ str(radius) +""",
+        logo="""+ '$' + text + '$' +"""
+        }
+    };
+"""
+
+def to_Box( name, offset="(0,0,0)", to="(0,0,0)", width=1.5, height=3, depth=25, opacity=0.8, color="blue", n_filer='{{" ","dummy"}}', s_filer="", caption=" "):
+    return r"""
+\pic[shift={"""+ offset +"""}] at """+ to +"""
+    {Box={
+        name=""" + name +""",
+        caption="""+ caption +""",
+        xlabel="""+ str(n_filer) +""",
+        zlabel="""+ str(s_filer) +""",
+        fill="""+ color +""",
+        opacity="""+ str(opacity) +""",
+        height="""+ str(height) +""",
+        width="""+ str(width) +""",
+        depth="""+ str(depth) +"""
+        }
+    };
+"""
 
 def to_connection( of, to):
     return r"""
