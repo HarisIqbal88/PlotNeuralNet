@@ -1,0 +1,136 @@
+\documentclass[border=15pt, multi, tikz]{standalone}
+\usepackage{import}
+\subimport{../../layers/}{init}
+\usetikzlibrary{positioning}
+
+\def\StemColor{rgb:yellow,5;red,2.5;white,5}
+\def\BlockAColor{rgb:blue,4;green,2.5;white,5}
+\def\BlockBColor{rgb:blue,3;green,5;white,5}
+\def\BlockCColor{rgb:blue,5;green,1;white,5}
+\def\ReductionColor{rgb:red,3;black,0.3}
+\def\PoolColor{rgb:magenta,5;black,7}
+\def\DropColor{rgb:blue,2;red,2;white,5}
+
+\newcommand{\arrowlength}{5}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+
+% Input
+\draw [connection]  (-\arrowlength,0,0)
+    node[anchor=south west,scale=1.8]{Input $299\!\times\!299\!\times\!3$}
+    -- node {\midarrow} (0,0,0);
+
+% Stem
+\pic[shift={(0,0,0)}] at (0,0,0) {Box={
+        name=stem,
+        caption=Stem\\$35\!\times\!35\!\times\!256$,
+        fill=\StemColor,
+        opacity=0.55,
+        height=28,
+        width=4,
+        depth=28
+}};
+
+% Inception-ResNet-A x5
+\pic[shift={(2.2,0,0)}] at (stem-east) {Box={
+        name=blockA,
+        caption=Inception-ResNet-A $\times5$\\$35\!\times\!35\!\times\!256$,
+        fill=\BlockAColor,
+        opacity=0.55,
+        height=28,
+        width=4.5,
+        depth=28
+}};
+
+% Reduction-A
+\pic[shift={(2.2,0,0)}] at (blockA-east) {Box={
+        name=redA,
+        caption=Reduction-A\\$17\!\times\!17\!\times\!896$,
+        fill=\ReductionColor,
+        opacity=0.6,
+        height=18,
+        width=3,
+        depth=18
+}};
+
+% Inception-ResNet-B x10
+\pic[shift={(2.2,0,0)}] at (redA-east) {Box={
+        name=blockB,
+        caption=Inception-ResNet-B $\times10$\\$17\!\times\!17\!\times\!896$,
+        fill=\BlockBColor,
+        opacity=0.55,
+        height=18,
+        width=5,
+        depth=18
+}};
+
+% Reduction-B
+\pic[shift={(2.2,0,0)}] at (blockB-east) {Box={
+        name=redB,
+        caption=Reduction-B\\$8\!\times\!8\!\times\!1792$,
+        fill=\ReductionColor,
+        opacity=0.6,
+        height=12,
+        width=3,
+        depth=12
+}};
+
+% Inception-ResNet-C x5
+\pic[shift={(2.2,0,0)}] at (redB-east) {Box={
+        name=blockC,
+        caption=Inception-ResNet-C $\times5$\\$8\!\times\!8\!\times\!1792$,
+        fill=\BlockCColor,
+        opacity=0.55,
+        height=12,
+        width=4.5,
+        depth=12
+}};
+
+% Global Average Pooling
+\pic[shift={(2.2,0,0)}] at (blockC-east) {Box={
+        name=gap,
+        caption=Global Avg Pool\\[-10pt]{\raisebox{-10pt}{$1\!\times\!1\!\times\!1792$}},
+        fill=\PoolColor,
+        opacity=0.6,
+        height=8,
+        width=4,
+        depth=8
+}};
+
+% Dropout keep 0.8
+\pic[shift={(1.8,0,0)}] at (gap-east) {Box={
+        name=drop,
+        caption=Dropout\\1792,
+        fill=\DropColor,
+        opacity=0.55,
+        height=8,
+        width=2,
+        depth=8
+}};
+
+% Softmax
+\pic[shift={(1.8,0,0)}] at (drop-east) {Box={
+        name=softmax,
+        caption=Softmax\\1000 classes,
+        fill=\PoolColor,
+        opacity=0.8,
+        height=2,
+        width=2,
+        depth=15
+}};
+
+% Connections
+\draw [connection] (stem-west) -- node {\midarrow} ++(-\arrowlength,0,0);
+\draw [connection] (stem-east) -- node {\midarrow} (blockA-west);
+\draw [connection] (blockA-east) -- node {\midarrow} (redA-west);
+\draw [connection] (redA-east) -- node {\midarrow} (blockB-west);
+\draw [connection] (blockB-east) -- node {\midarrow} (redB-west);
+\draw [connection] (redB-east) -- node {\midarrow} (blockC-west);
+\draw [connection] (blockC-east) -- node {\midarrow} (gap-west);
+\draw [connection] (gap-east) -- node {\midarrow} (drop-west);
+\draw [connection] (drop-east) -- node {\midarrow} (softmax-west);
+
+\end{tikzpicture}
+\end{document}
