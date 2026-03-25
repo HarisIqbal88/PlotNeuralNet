@@ -57,6 +57,9 @@ See [`examples`](examples) directory for usage.
 
 ## Python usage
 
+For newer segmentation/transformer templates, see `pyexamples/README.md`.
+It includes `unet.py`, `attention_unet.py`, `transformer_encoder.py`, and `transunet.py`, plus a smoke test script.
+
 First, create a new directory and a new Python file:
 
     $ mkdir my_project

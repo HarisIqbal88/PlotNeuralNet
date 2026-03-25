@@ -1,0 +1,421 @@
+
+\documentclass[border=8pt, multi, tikz]{standalone} 
+\usepackage{import}
+\subimport{C:/PYY/PlotNeuralNet/layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{3d} %for including external image 
+
+\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+\def\ConvReluColor{rgb:yellow,5;red,5;white,5}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
+\def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\SoftmaxColor{rgb:magenta,5;black,7}   
+\def\SumColor{rgb:blue,5;green,15}
+\def\PatchEmbedColor{rgb:orange,5;yellow,2;white,4}
+\def\TokenColor{rgb:purple,4;blue,2;white,5}
+\def\AttentionColor{rgb:cyan,5;blue,2;white,4}
+\def\ReconstructColor{rgb:blue,2;green,4;white,5}
+\def\ConcatColor{rgb:green,4;blue,1;white,5}
+\def\QColor{rgb:blue,5;white,5}
+\def\KColor{rgb:green,5;white,5}
+\def\VColor{rgb:red,5;white,5}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+
+\pic[shift={(0,0,0)}] at (-7.0,0,0) 
+    {Box={
+        name=input,
+        caption= ,
+        xlabel={{3, }},
+        zlabel=224x224,
+        fill=\ConvColor,
+        height=25,
+        width=1.8,
+        depth=25
+        }
+    };
+
+\pic[shift={ (2.3,0,0) }] at (input-east) 
+    {RightBandedBox={
+        name=enc1,
+        caption= ,
+        xlabel={{ 64, 64 }},
+        zlabel=112x112,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=25,
+        width={ 1.4 , 1.4 },
+        depth=25
+        }
+    };
+
+\draw [connection]  (input-east)    -- node {\midarrow} (enc1-west);
+
+\pic[shift={ (0,0,0) }] at (enc1-east) 
+    {Box={
+        name=pool1,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=21,
+        width=1,
+        depth=21
+        }
+    };
+
+\draw [connection]  (enc1-east)    -- node {\midarrow} (pool1-west);
+
+\pic[shift={ (1.6,0,0) }] at (pool1-east) 
+    {RightBandedBox={
+        name=enc2,
+        caption= ,
+        xlabel={{ 128, 128 }},
+        zlabel=56x56,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=21,
+        width={ 1.5 , 1.5 },
+        depth=21
+        }
+    };
+
+\draw [connection]  (pool1-east)    -- node {\midarrow} (enc2-west);
+
+\pic[shift={ (0,0,0) }] at (enc2-east) 
+    {Box={
+        name=pool2,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=17,
+        width=1,
+        depth=17
+        }
+    };
+
+\draw [connection]  (enc2-east)    -- node {\midarrow} (pool2-west);
+
+\pic[shift={ (1.6,0,0) }] at (pool2-east) 
+    {RightBandedBox={
+        name=enc3,
+        caption= ,
+        xlabel={{ 256, 256 }},
+        zlabel=28x28,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=17,
+        width={ 1.6 , 1.6 },
+        depth=17
+        }
+    };
+
+\draw [connection]  (pool2-east)    -- node {\midarrow} (enc3-west);
+
+\pic[shift={ (0,0,0) }] at (enc3-east) 
+    {Box={
+        name=pool3,
+        caption= ,
+        fill=\PoolColor,
+        opacity=0.5,
+        height=13,
+        width=1,
+        depth=13
+        }
+    };
+
+\draw [connection]  (enc3-east)    -- node {\midarrow} (pool3-west);
+
+\pic[shift={ (1.6,0,0) }] at (pool3-east) 
+    {RightBandedBox={
+        name=enc4,
+        caption= ,
+        xlabel={{ 512, 512 }},
+        zlabel=14x14,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=13,
+        width={ 1.7 , 1.7 },
+        depth=13
+        }
+    };
+
+\draw [connection]  (pool3-east)    -- node {\midarrow} (enc4-west);
+
+\pic[shift={ (1.8,0,0) }] at (enc4-east)
+    {RightBandedBox={
+        name=bridge_patch,
+        caption={},
+        xlabel={{"Split", "Linear"}},
+        ylabel=D=768,
+        zlabel=N=196,
+        fill=\PatchEmbedColor,
+        bandfill=\TokenColor,
+        opacity=0.6,
+        bandopacity=0.72,
+        height=12,
+        width={ 1.15 , 1.15 },
+        depth=12
+        }
+    };
+
+\draw [connection]  (enc4-east)    -- node {\midarrow} (bridge_patch-west);
+
+\pic[shift={ (2.22,0.68,0) }] at (bridge_patch-east)
+    {RightBandedBox={
+        name=bridge_transformer_shadow2,
+        caption={},
+        xlabel={{"", ""}},
+        ylabel=,
+        zlabel=,
+        fill=\TokenColor,
+        bandfill=\AttentionColor,
+        opacity=0.36,
+        bandopacity=0.5,
+        height=13,
+        width={ 1.55 , 1.55 },
+        depth=13
+        }
+    };
+
+\pic[shift={ (1.86,0.34,0) }] at (bridge_patch-east)
+    {RightBandedBox={
+        name=bridge_transformer_shadow1,
+        caption={},
+        xlabel={{"", ""}},
+        ylabel=,
+        zlabel=,
+        fill=\TokenColor,
+        bandfill=\AttentionColor,
+        opacity=0.49,
+        bandopacity=0.63,
+        height=13,
+        width={ 1.55 , 1.55 },
+        depth=13
+        }
+    };
+
+\pic[shift={ (1.5,0,0) }] at (bridge_patch-east)
+    {RightBandedBox={
+        name=bridge_transformer,
+        caption={},
+        xlabel={{"MHSA", "MLP"}},
+        ylabel=D=768,
+        zlabel=N=196,
+        fill=\TokenColor,
+        bandfill=\AttentionColor,
+        opacity=0.62,
+        bandopacity=0.76,
+        height=13,
+        width={ 1.55 , 1.55 },
+        depth=13
+        }
+    };
+
+\draw [connection]  (bridge_patch-east)    -- node {\midarrow} (bridge_transformer-west);
+
+\pic[shift={ (1.55,0,0) }] at (bridge_transformer-east)
+    {RightBandedBox={
+        name=reconstruct,
+        caption={},
+        xlabel={{"Reshape", "Proj"}},
+        ylabel=C=512,
+        zlabel=14x14,
+        fill=\ReconstructColor,
+        bandfill=\ConvColor,
+        opacity=0.6,
+        bandopacity=0.72,
+        height=12,
+        width={ 1.35 , 1.1 },
+        depth=12
+        }
+    };
+
+\draw [connection]  (bridge_transformer-east)    -- node {\midarrow} (reconstruct-west);
+
+\pic[shift={ (1.7,0,0) }] at (reconstruct-east) 
+    {Box={
+        name=up3,
+        caption= ,
+        fill=\UnpoolColor,
+        opacity=0.55,
+        height=17,
+        width=1,
+        depth=17
+        }
+    };
+
+\draw [connection]  (reconstruct-east)    -- node {\midarrow} (up3-west);
+
+\pic[shift={ (0.9,0,0) }] at (up3-east) 
+    {RightBandedBox={
+        name=dec3,
+        caption= ,
+        xlabel={{ 256, 256 }},
+        zlabel=28x28,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=17,
+        width={ 1.6 , 1.6 },
+        depth=17
+        }
+    };
+
+\draw [connection]  (up3-east)    -- node {\midarrow} (dec3-west);
+
+\pic[shift={ (1.5,0,0) }] at (dec3-east) 
+    {Box={
+        name=up2,
+        caption= ,
+        fill=\UnpoolColor,
+        opacity=0.55,
+        height=21,
+        width=1,
+        depth=21
+        }
+    };
+
+\draw [connection]  (dec3-east)    -- node {\midarrow} (up2-west);
+
+\pic[shift={ (0.9,0,0) }] at (up2-east) 
+    {RightBandedBox={
+        name=dec2,
+        caption= ,
+        xlabel={{ 128, 128 }},
+        zlabel=56x56,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=21,
+        width={ 1.5 , 1.5 },
+        depth=21
+        }
+    };
+
+\draw [connection]  (up2-east)    -- node {\midarrow} (dec2-west);
+
+\pic[shift={ (1.5,0,0) }] at (dec2-east) 
+    {Box={
+        name=up1,
+        caption= ,
+        fill=\UnpoolColor,
+        opacity=0.55,
+        height=25,
+        width=1,
+        depth=25
+        }
+    };
+
+\draw [connection]  (dec2-east)    -- node {\midarrow} (up1-west);
+
+\pic[shift={ (0.9,0,0) }] at (up1-east) 
+    {RightBandedBox={
+        name=dec1,
+        caption= ,
+        xlabel={{ 64, 64 }},
+        zlabel=112x112,
+        fill=\ConvColor,
+        bandfill=\ConvReluColor,
+        height=25,
+        width={ 1.4 , 1.4 },
+        depth=25
+        }
+    };
+
+\draw [connection]  (up1-east)    -- node {\midarrow} (dec1-west);
+
+\pic[shift={(1.8,0,0)}] at (dec1-east) 
+    {Box={
+        name=seg,
+        caption= ,
+        zlabel=224x224,
+        fill=\SoftmaxColor,
+        height=25,
+        width=1.7,
+        depth=25
+        }
+    };
+
+\draw [connection]  (dec1-east)    -- node {\midarrow} (seg-west);
+
+\path (enc1-southeast) -- (enc1-northeast) coordinate[pos=1.86] (enc1-top) ;
+\path (dec1-south)  -- (dec1-north)  coordinate[pos=1.86] (dec1-top) ;
+\draw [copyconnection]  (enc1-northeast)
+-- node {\copymidarrow}(enc1-top)
+-- node {\copymidarrow}(dec1-top)
+-- node {\copymidarrow} (dec1-north);
+
+\path (enc2-southeast) -- (enc2-northeast) coordinate[pos=1.63] (enc2-top) ;
+\path (dec2-south)  -- (dec2-north)  coordinate[pos=1.63] (dec2-top) ;
+\draw [copyconnection]  (enc2-northeast)
+-- node {\copymidarrow}(enc2-top)
+-- node {\copymidarrow}(dec2-top)
+-- node {\copymidarrow} (dec2-north);
+
+\path (enc3-southeast) -- (enc3-northeast) coordinate[pos=1.42] (enc3-top) ;
+\path (dec3-south)  -- (dec3-north)  coordinate[pos=1.42] (dec3-top) ;
+\draw [copyconnection]  (enc3-northeast)
+-- node {\copymidarrow}(enc3-top)
+-- node {\copymidarrow}(dec3-top)
+-- node {\copymidarrow} (dec3-north);
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (input_label) at ($(input-anchor)+(0,3.7,0)$) {Input\\Layer};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (encoder_label) at ($(enc2-anchor)!0.5!(enc4-anchor)+(0,4.2,0)$) {CNN\\Encoder};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (patch_label) at ($(bridge_patch-anchor)+(0,3.7,0)$) {Patch\\Embedding};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (transformer_label) at ($(bridge_transformer-anchor)+(0,4.3,0)$) {Transformer\\Encoder};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (reconstruct_label) at ($(reconstruct-anchor)+(0,3.9,0)$) {Feature\\Reconstruction};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (decoder_label) at ($(dec3-anchor)!0.5!(dec1-anchor)+(0,4.2,0)$) {U-Net\\Decoder};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (skip_label) at ($(enc2-anchor)!0.5!(dec2-anchor)+(0,6.2,0)$) {Skip\\Connections};
+
+\node[font=\bfseries\small, align=center, fill=white, fill opacity=0.9, text opacity=1, rounded corners=2pt, inner sep=2pt] (seg_label) at ($(seg-anchor)+(0,3.7,0)$) {Segmentation\\Head};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (input_note) at ($(input-anchor)+(0,-5.0,0)$) {Input};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (enc1_note) at ($(enc1-anchor)+(0,-5.0,0)$) {Enc1};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (enc2_note) at ($(enc2-anchor)+(0,-5.0,0)$) {Enc2};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (enc3_note) at ($(enc3-anchor)+(0,-5.0,0)$) {Enc3};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (enc4_note) at ($(enc4-anchor)+(0,-5.0,0)$) {Hybrid\\CNN};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (patch_note) at ($(bridge_patch-anchor)+(0,-5.0,0)$) {Patch\\Embed};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (transformer_note) at ($(bridge_transformer-anchor)+(0,-5.0,0)$) {Encoder\\Layer\\$\times 12$};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (reconstruct_note) at ($(reconstruct-anchor)+(0,-5.0,0)$) {Reshape\\Proj};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (dec3_note) at ($(dec3-anchor)+(0,-5.0,0)$) {Dec3};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (dec2_note) at ($(dec2-anchor)+(0,-5.0,0)$) {Dec2};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (dec1_note) at ($(dec1-anchor)+(0,-5.0,0)$) {Dec1};
+
+\node[font=\scriptsize, align=center, fill=white, fill opacity=0.92, text opacity=1, rounded corners=1pt, inner sep=1.5pt] (seg_note) at ($(seg-anchor)+(0,-5.0,0)$) {1x1\\Conv};
+\node[draw, fill=white, rounded corners=2pt, inner sep=5pt, opacity=0.95] at (18.5,-7.2,0) {
+    \footnotesize
+    \begin{tabular}{ll}
+\textbf{TransUNet} & \\
+\tikz \draw[draw=black, fill=\ConvColor, opacity=0.9] (0,0) rectangle +(0.35,0.18); & CNN Encoder / Decoder\\
+\tikz \draw[draw=black, fill=\PoolColor, opacity=0.9] (0,0) rectangle +(0.35,0.18); & Down / Up Sampling\\
+\tikz \draw[draw=black, fill=\PatchEmbedColor, opacity=0.9] (0,0) rectangle +(0.35,0.18); & Patch Embedding\\
+\tikz \draw[draw=black, fill=\TokenColor, opacity=0.9] (0,0) rectangle +(0.35,0.18); & Transformer Encoder\\
+\tikz \draw[draw=black, fill=\ReconstructColor, opacity=0.9] (0,0) rectangle +(0.35,0.18); & Feature Reconstruction\\
+\tikz \draw[draw=black, fill=\SoftmaxColor, opacity=0.9] (0,0) rectangle +(0.35,0.18); & Segmentation Head\\
+    \end{tabular}
+};
+
+\end{tikzpicture}
+\end{document}
