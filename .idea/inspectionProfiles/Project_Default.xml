@@ -1,0 +1,52 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="numpy" />
+          <option value="pandas" />
+          <option value="scipy" />
+          <option value="scikit-learn" />
+          <option value="scikit-image" />
+          <option value="matplotlib" />
+          <option value="seaborn" />
+          <option value="pyyaml" />
+          <option value="tqdm" />
+          <option value="jupyter" />
+          <option value="networkx" />
+          <option value="h5py" />
+          <option value="pytorch" />
+          <option value="torchvision" />
+          <option value="torchaudio" />
+          <option value="cudatoolkit" />
+          <option value="monai" />
+          <option value="tensorboard" />
+          <option value="opencv-python" />
+          <option value="transformers" />
+          <option value="timm" />
+          <option value="nibabel" />
+          <option value="einops" />
+          <option value="kornia" />
+          <option value="mlflow" />
+          <option value="nni" />
+          <option value="yacs" />
+          <option value="termcolor" />
+          <option value="addict" />
+          <option value="yapf" />
+          <option value="beautifulsoup4" />
+          <option value="thop" />
+          <option value="torch-lucent" />
+          <option value="imgaug" />
+          <option value="itk" />
+          <option value="pydicom" />
+          <option value="simplejson" />
+          <option value="prettytable" />
+          <option value="pytest" />
+          <option value="optuna" />
+          <option value="gdown" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
